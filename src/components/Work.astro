@@ -1,59 +1,68 @@
 ---
 import WorkCard from "./WorkCard.astro";
 import SectionHeading from "./SectionHeading.astro";
+import MoreWork from "./MoreWork.astro";
 
 const projects = [
+  {
+    title: "DHS-BankingSim",
+    meta: "Flagship Commercial System · Live · 2026",
+    tags: ["Lua", "React", "TypeScript", "SQL", "community_bridge"],
+    copy: "A full banking economy, not a balance screen — ~47,000 lines of Lua across 49 files plus a React NUI. Player-owned banks, physical cards with PINs, a 300–850 credit engine driving six loan types, a working POS merchant suite, and a server-side fraud engine. Framework-agnostic across QBox, QBCore, and ESX via community_bridge, with a server-authoritative cache (TTL + dirty-flag invalidation) tuned for 200+ player servers.",
+    image: "/banking.webp",
+    study: "/banking",
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
+  },
   {
     title: "Prison Simulation System",
     meta: "Live Commercial Product · 2025",
     tags: ["Lua", "JavaScript", "SQL", "HTML/CSS"],
     copy: "Complete gameplay loop with progression, persistence, and economy systems — designed, built, and shipped solo. Sold to paying server operators and running in production on live multiplayer platforms.",
-    asset: "Gameplay screenshot / clip",
+    image: "/prisonsim.webp",
     study: "/ux",
-    link: { href: "https://store.dragonheartstudios.net", label: "store.dragonheartstudios.net" },
-  },
-  {
-    title: "District 77 Community Platform",
-    meta: "Full Build · 2023",
-    tags: ["React", "JavaScript", "HTML/CSS"],
-    copy: "Combined forum and e-commerce store for a 1,000+ member multiplayer community. Built from scratch — no CMS, no templates.",
-    asset: "Platform screenshots",
-    link: { href: "https://github.com/Tkiljoy", label: "View on GitHub" },
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
   },
   {
     title: "DHS-Lair",
-    meta: "AI Desktop Assistant · In Development · 2026",
-    tags: ["Electron", "Python FastAPI", "faster-whisper", "ElevenLabs", "Claude API"],
-    copy: "JARVIS-style assistant with real-time voice I/O and an LLM reasoning core in a cross-platform desktop shell. Built entirely self-directed.",
-    asset: "Voice interaction demo clip",
-    link: { href: "https://github.com/Tkiljoy", label: "View on GitHub" },
+    meta: "Multi-Agent AI Orchestration Platform · In Development · 2026",
+    tags: ["Node.js", "TypeScript", "Fastify", "SQLite", "Claude"],
+    copy: "Self-hosted platform that coordinates a crew of role-based AI agents (router, dev, review, ideas, ops), each sandboxed with its own tool allowlist. Features shared persistent memory, an append-only audit log, kill switches, and an outbound exfil guard. Built entirely self-directed. Voice I/O on the roadmap.",
+    asset: "Dashboard / war-room screenshot",
+    link: { href: "https://github.com/Tkiljoy/DHS-Lair", label: "View on GitHub" },
+  },
+  {
+    title: "Petty Crime System",
+    meta: "Live Commercial Product · 2025",
+    tags: ["Lua", "JavaScript", "SQL", "NUI"],
+    copy: "Modular criminal-activity gameplay system with server-side validation and real-time client sync, wrapped in a custom NUI. Part of the Dragon Heart Studios commercial catalogue running live on multiplayer servers.",
+    image: "/pettycrimev2.webp",
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
+  },
+  {
+    title: "Tri-Rental",
+    meta: "Tri Studios · Commercial · 2026",
+    tags: ["Lua", "JavaScript", "NUI", "Multi-framework"],
+    copy: "Premium car-rental system — a three-column NUI storefront, server-authoritative rental flow, live telemetry (distance and fuel sampled every 5s), and an itemised return bill that breaks out base rate, fuel, damage, and mileage overage. Owners add vehicles to the fleet at runtime. One config, three frameworks (QBox, QBCore, ESX).",
+    asset: "Rental storefront NUI",
   },
   {
     title: "ReeMain Automations",
-    meta: "AI Automation Studio · 2026",
+    meta: "Co-Founded AI Automation Agency · 2026",
     tags: ["n8n", "Claude API", "OpenAI API", "MCP"],
-    copy: "27 production automation workflows for SMB clients.",
+    copy: "Co-founded (50/50, UK Ltd) AI automation agency. Built the platform and shipped 27 production n8n workflows across three productized services — AI email triage, lead qualification, and invoice & follow-up automation — integrating Claude and OpenAI reasoning over MCP tooling.",
     caseStudies: [
-      {
-        title: "Smart inbox",
-        detail: "inbound email scored, summarized, and routed automatically.",
-      },
-      {
-        title: "Lead qualification",
-        detail: "enquiries enriched and prioritized before a human ever reads them.",
-      },
-      {
-        title: "Invoice automation",
-        detail: "end-to-end generation and follow-up with zero manual steps.",
-      },
+      { title: "Smart inbox", detail: "inbound email scored, summarized, and routed automatically." },
+      { title: "Lead qualification", detail: "enquiries enriched and prioritized before a human ever reads them." },
+      { title: "Invoice automation", detail: "end-to-end generation and follow-up with zero manual steps." },
     ],
   },
   {
-    title: "Dragon Heart Studios",
-    meta: "Founded 2022",
-    tags: ["Full-stack", "Product", "E-commerce"],
-    copy: "Self-funded digital products studio. $30,000+ annual revenue, 1,000+ paying customers, 2,000+ member community. Every product designed, built, shipped, and supported by one person.",
-    link: { href: "https://store.dragonheartstudios.net", label: "store.dragonheartstudios.net" },
+    title: "District 77 Community Platform",
+    meta: "Lead Developer · 2023–present",
+    tags: ["React", "JavaScript", "HTML/CSS"],
+    copy: "Combined forum and e-commerce store for a 1,000+ member multiplayer community — built from scratch, no CMS, no templates. Ongoing lead developer for the platform's server architecture and feature delivery.",
+    asset: "Platform screenshots",
+    link: { href: "https://github.com/Tkiljoy", label: "View on GitHub" },
   },
 ];
 ---
@@ -62,5 +71,8 @@ const projects = [
   <div class="mx-auto max-w-5xl px-5 sm:px-8">
     <SectionHeading num="01" title="Featured Work" ghost="Work" />
     {projects.map((project, i) => <WorkCard index={i + 1} {...project} />)}
+
+    <h3 class="mt-20 mb-8 font-mono text-xs tracking-[0.2em] text-faint uppercase">More Work</h3>
+    <MoreWork />
   </div>
 </section>

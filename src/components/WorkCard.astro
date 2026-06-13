@@ -13,10 +13,11 @@ interface Props {
   link?: { href: string; label: string };
   study?: string; // internal link to a full UX case study page
   asset?: string; // label for the placeholder slot, omitted = no media
+  image?: string; // real screenshot path; overrides the hatch placeholder
   caseStudies?: CaseStudy[];
 }
 
-const { index, title, meta, tags, copy, link, study, asset, caseStudies } = Astro.props;
+const { index, title, meta, tags, copy, link, study, asset, image, caseStudies } = Astro.props;
 const number = String(index).padStart(2, "0");
 ---
 
@@ -67,14 +68,24 @@ const number = String(index).padStart(2, "0");
       }
 
       {
-        asset && (
-          <div
-            class="hatch mt-7 flex aspect-video max-w-2xl items-center justify-center border border-dashed border-line bg-raised/50"
-            role="img"
-            aria-label={`${title} — ${asset} coming soon`}
-          >
-            <span class="px-4 text-center font-mono text-xs text-muted">{asset}</span>
-          </div>
+        image ? (
+          <img
+            src={image}
+            alt={`${title} screenshot`}
+            loading="lazy"
+            decoding="async"
+            class="mt-7 aspect-video w-full max-w-2xl border border-line object-cover"
+          />
+        ) : (
+          asset && (
+            <div
+              class="hatch mt-7 flex aspect-video max-w-2xl items-center justify-center border border-dashed border-line bg-raised/50"
+              role="img"
+              aria-label={`${title} — ${asset} coming soon`}
+            >
+              <span class="px-4 text-center font-mono text-xs text-muted">{asset}</span>
+            </div>
+          )
         )
       }
 

@@ -1,0 +1,452 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+const systems = [
+  {
+    n: "01",
+    title: "Cards",
+    body:
+      "Five card types from a personal debit to a $100K-limit Black card, each a physical inventory item with its own PIN, lockout on failed entry, and per-card limits.",
+  },
+  {
+    n: "02",
+    title: "Credit score",
+    body:
+      "A 300–850 engine weighing payment history (40%), utilization (30%), account age (15%), and defaults (15%) — the single number that gates loan access and terms.",
+  },
+  {
+    n: "03",
+    title: "Loans",
+    body:
+      "Six loan types with collateral, repayment schedules, late fees, and defaults, all underwritten against the live credit score rather than a flat approval.",
+  },
+  {
+    n: "04",
+    title: "POS suite",
+    body:
+      "Fixed and portable merchant terminals with receipts, refunds, pre-auth holds, per-merchant tax/VAT, and staff roles — a working point-of-sale, not a pay command.",
+  },
+  {
+    n: "05",
+    title: "Player-owned banks",
+    body:
+      "Buy a branch license, hire staff into an employee hierarchy, upgrade tiers, and build branch reputation that scales NPC walk-in traffic from 0.3x to 1.6x.",
+  },
+  {
+    n: "06",
+    title: "Interbank clearing",
+    body:
+      "Batch settlement between branches plus a central reserve providing liquidity lending — the back-end plumbing that keeps the economy solvent at scale.",
+  },
+];
+
+const hardening = [
+  {
+    title: "Server-authoritative",
+    body: "The client is never trusted. Every balance, transfer, and card action is validated and committed server-side.",
+  },
+  {
+    title: "Zero-DB cache hits",
+    body: "A server-side banking cache with TTL + dirty-flag invalidation means repeat UI opens cost zero database queries.",
+  },
+  {
+    title: "Rate limiting",
+    body: "Failed card auth is rate limited and locks out, blunting brute-force PIN attempts.",
+  },
+  {
+    title: "Velocity caps",
+    body: "Transfers are capped by velocity to stop drain-and-dash exploits before they clear.",
+  },
+  {
+    title: "Double-send locks",
+    body: "Transaction locks prevent double-send races so a single intent can never settle twice.",
+  },
+  {
+    title: "Single-controller NPCs",
+    body: "The NPC customer system runs on one controller client with server sync — not a per-player loop — so traffic scales flat.",
+  },
+  {
+    title: "Fraud engine",
+    body: "Server-side detection for high-value, velocity, structuring, and new-recipient patterns, backed by a watchlist.",
+  },
+  {
+    title: "Escrow-safe hooks",
+    body: "Editable hook files and all config files are escrow-ignored, so operators tune behavior without unlocking the source.",
+  },
+];
+---
+
+<Layout
+  title="DHS-BankingSim — Case Study — Kristepher Reed"
+  description="Engineering case study: architecture, data model, and hardening behind a full FiveM banking economy built solo."
+>
+  <Nav />
+  <main id="main">
+    <!-- Intro -->
+    <section class="relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent)]"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-40 right-[-15%] h-[30rem] w-[30rem] rounded-full opacity-20 blur-3xl"
+        style="background: radial-gradient(closest-side, #8b5cf6, transparent 70%);"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute top-20 left-[-15%] h-[26rem] w-[26rem] rounded-full opacity-15 blur-3xl"
+        style="background: radial-gradient(closest-side, #e879f9, transparent 70%);"
+      >
+      </div>
+      <div class="relative mx-auto max-w-5xl px-5 pt-32 pb-12 sm:px-8 sm:pt-40 sm:pb-16">
+        <p data-reveal class="font-mono text-xs tracking-[0.25em] text-accent uppercase">
+          Case Study
+        </p>
+        <h1
+          data-reveal
+          style="--reveal-delay: 0.08s"
+          class="mt-4 font-display text-4xl leading-[0.95] font-black tracking-tight text-ink sm:text-6xl md:text-7xl"
+        >
+          DHS-BankingSim<span class="text-gradient">.</span>
+        </h1>
+        <p
+          data-reveal
+          style="--reveal-delay: 0.16s"
+          class="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+        >
+          The full banking economy, not a balance screen. ~47,000 lines of Lua across 49 files plus
+          a React NUI, built solo across architecture, back-end, and UI — and tuned to survive a
+          200+ player server.
+        </p>
+        <dl
+          data-reveal
+          style="--reveal-delay: 0.24s"
+          class="mt-8 grid max-w-2xl grid-cols-2 gap-px border border-line bg-line sm:grid-cols-4"
+        >
+          {
+            [
+              ["Role", "Solo — architecture to ship"],
+              ["Year", "2026"],
+              ["Status", "Live & selling"],
+              ["Scale", "200+ players"],
+            ].map(([dt, dd]) => (
+              <div class="bg-surface px-4 py-3">
+                <dt class="font-mono text-[10px] tracking-[0.2em] text-faint uppercase">{dt}</dt>
+                <dd class="mt-1 font-mono text-xs text-ink">{dd}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <img
+          data-reveal
+          style="--reveal-delay: 0.32s"
+          src="/banking.webp"
+          alt="DHS-BankingSim banking interface running in FiveM"
+          width="1280"
+          height="720"
+          loading="eager"
+          class="mt-10 aspect-video w-full border border-line object-cover bg-surface/60"
+        />
+      </div>
+    </section>
+
+    <!-- The Problem -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="01" title="The Problem" ghost="Problem" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          Most banking scripts are a balance screen and a deposit button. The economy lives
+          somewhere off-screen, and the bank itself is a menu you click, not a place you go.
+        </p>
+        <p data-reveal style="--reveal-delay: 0.08s" class="mt-5 max-w-2xl leading-relaxed text-muted">
+          The design goal was the opposite: make the bank a place players run — owning branches,
+          hiring staff, lending, taking POS payments, gaming a credit score — and make all of it
+          survive 200+ players hitting it at once without melting the server or the database.
+        </p>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="02" title="Architecture" ghost="System" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          One resource, server-authoritative end to end. A <span class="font-mono text-accent-soft">community_bridge</span>
+          abstraction lets the exact same code run on QBox, QBCore, and ESX. A cache layer absorbs
+          read traffic, and the NPC crowd runs on a single controller — not a loop per player.
+        </p>
+        <div data-reveal class="mt-10 overflow-x-auto border border-line bg-surface/40 p-4 sm:p-6">
+          <svg
+            viewBox="0 0 1180 470"
+            class="min-w-[960px]"
+            role="img"
+            aria-label="Architecture diagram: the React NUI sends requests through the community_bridge abstraction into the server core, which is composed of accounts, cards, loans, POS, and fraud modules; those modules read and write through a banking cache with TTL and dirty-flag invalidation, which talks to MySQL; separately, a single NPC controller client syncs NPC customer state to the server core rather than every player running its own loop."
+          >
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#a855f7"></path>
+              </marker>
+              <marker id="arrhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#e879f9"></path>
+              </marker>
+            </defs>
+            <style>
+              .node { fill: #120b20; stroke: #2b1c47; stroke-width: 1.5; rx: 6; }
+              .node-accent { stroke: #a855f7; }
+              .node-hot { stroke: #e879f9; stroke-dasharray: 5 4; }
+              .lbl { fill: #ece7f8; font: 600 15px "JetBrains Mono Variable", monospace; }
+              .sub { fill: #a89bc7; font: 400 11px "JetBrains Mono Variable", monospace; }
+              .edge { stroke: #a855f7; stroke-width: 1.5; fill: none; opacity: 0.7; }
+              .edge-hot { stroke: #e879f9; stroke-width: 1.5; fill: none; opacity: 0.7; stroke-dasharray: 5 4; }
+              .tag { fill: #6f5f93; font: 400 10px "JetBrains Mono Variable", monospace; letter-spacing: 0.1em; }
+            </style>
+
+            <!-- NUI -->
+            <rect class="node node-accent" x="20" y="160" width="150" height="64" rx="6"></rect>
+            <text class="lbl" x="42" y="188">REACT NUI</text>
+            <text class="sub" x="42" y="206">client UI layer</text>
+            <text class="tag" x="20" y="150">CLIENT</text>
+
+            <line class="edge" x1="170" y1="192" x2="214" y2="192" marker-end="url(#arr)"></line>
+
+            <!-- bridge -->
+            <rect class="node node-accent" x="218" y="160" width="170" height="64" rx="6"></rect>
+            <text class="lbl" x="240" y="184">community_</text>
+            <text class="lbl" x="240" y="202">bridge</text>
+            <text class="sub" x="240" y="218">QBox · QBCore · ESX</text>
+            <text class="tag" x="218" y="150">ABSTRACTION</text>
+
+            <line class="edge" x1="388" y1="192" x2="432" y2="192" marker-end="url(#arr)"></line>
+
+            <!-- server core / modules -->
+            <rect class="node node-accent" x="436" y="70" width="280" height="244" rx="6"></rect>
+            <text class="lbl" x="458" y="98">SERVER CORE</text>
+            <text class="sub" x="458" y="116">authoritative · client never trusted</text>
+            <text class="tag" x="436" y="60">SERVER</text>
+
+            <rect class="node" x="458" y="132" width="110" height="48" rx="6"></rect>
+            <text class="lbl" x="474" y="160">accounts</text>
+
+            <rect class="node" x="584" y="132" width="110" height="48" rx="6"></rect>
+            <text class="lbl" x="600" y="160">cards</text>
+
+            <rect class="node" x="458" y="192" width="110" height="48" rx="6"></rect>
+            <text class="lbl" x="474" y="220">loans</text>
+
+            <rect class="node" x="584" y="192" width="110" height="48" rx="6"></rect>
+            <text class="lbl" x="600" y="220">POS</text>
+
+            <rect class="node" x="458" y="252" width="236" height="44" rx="6"></rect>
+            <text class="lbl" x="474" y="280">fraud engine</text>
+
+            <line class="edge" x1="716" y1="192" x2="760" y2="192" marker-end="url(#arr)"></line>
+
+            <!-- cache -->
+            <rect class="node node-accent" x="764" y="158" width="180" height="68" rx="6"></rect>
+            <text class="lbl" x="786" y="184">BANKING CACHE</text>
+            <text class="sub" x="786" y="202">TTL + dirty-flag</text>
+            <text class="sub" x="786" y="218">repeat opens → 0 queries</text>
+            <text class="tag" x="764" y="148">CACHE</text>
+
+            <line class="edge" x1="944" y1="192" x2="988" y2="192" marker-end="url(#arr)"></line>
+
+            <!-- db -->
+            <rect class="node" x="992" y="160" width="160" height="64" rx="6"></rect>
+            <text class="lbl" x="1014" y="188">MySQL</text>
+            <text class="sub" x="1014" y="206">persistence</text>
+            <text class="tag" x="992" y="150">DATABASE</text>
+
+            <!-- NPC controller -->
+            <rect class="node node-hot" x="218" y="350" width="220" height="64" rx="6"></rect>
+            <text class="lbl" x="240" y="378">NPC CONTROLLER</text>
+            <text class="sub" x="240" y="396">single client · not per-player</text>
+            <text class="tag" x="218" y="340">CLIENT</text>
+
+            <path class="edge-hot" d="M438 382 C 540 382, 540 314, 576 314" marker-end="url(#arrhot)"></path>
+            <text class="tag" x="452" y="340">SYNCS NPC STATE → SERVER</text>
+          </svg>
+        </div>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          <article data-reveal data-spotlight class="border border-line bg-surface/60 p-6 sm:p-8">
+            <span class="font-mono text-xs text-accent">Layer 01</span>
+            <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+              One resource, three frameworks
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">
+              A <span class="font-mono text-accent-soft">community_bridge</span> abstraction sits
+              between the gameplay code and the framework. The same banking logic runs on QBox,
+              QBCore, and ESX with no forked builds — the install just resolves to whatever the
+              server already runs.
+            </p>
+          </article>
+          <article data-reveal data-spotlight style="--reveal-delay: 0.06s" class="border border-line bg-surface/60 p-6 sm:p-8">
+            <span class="font-mono text-xs text-accent">Layer 02</span>
+            <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+              A cache that earns its keep
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">
+              A server-side banking cache holds account state behind a TTL with dirty-flag
+              invalidation. Repeat UI opens — the most common action — cost zero database queries,
+              and writes mark exactly what changed instead of round-tripping everything.
+            </p>
+          </article>
+          <article data-reveal data-spotlight style="--reveal-delay: 0.12s" class="border border-line bg-surface/60 p-6 sm:p-8">
+            <span class="font-mono text-xs text-accent">Layer 03</span>
+            <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+              Crowds without per-player cost
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">
+              The NPC customer system runs on a single controller client and syncs state to the
+              server, instead of every connected player spawning and ticking its own NPCs. Branch
+              foot traffic scales with reputation, not with the player count.
+            </p>
+          </article>
+          <article data-reveal data-spotlight style="--reveal-delay: 0.18s" class="border border-line bg-surface/60 p-6 sm:p-8">
+            <span class="font-mono text-xs text-accent">Layer 04</span>
+            <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+              Server-authoritative by default
+            </h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">
+              Nothing the client sends is taken on faith. Balances, transfers, card auth, loans,
+              and POS charges are all validated and committed on the server — the NUI only ever
+              renders state it was given.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Systems & data model -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="03" title="Systems & Data Model" ghost="Systems" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          Six interlocking systems make up the economy. Each is its own server module, and they
+          share one consistent account model so a card, a loan, and a POS charge all move the same
+          money.
+        </p>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {
+            systems.map((s, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <span class="font-mono text-xs text-accent">System {s.n}</span>
+                <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+                  {s.title}
+                </h3>
+                <p class="mt-3 text-sm leading-relaxed text-muted">{s.body}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-10 border border-line bg-surface/60 p-6 sm:p-8">
+          <span class="font-mono text-xs text-accent">Credit score weighting</span>
+          <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+            What moves the 300–850 number
+          </h3>
+          <dl class="mt-6 grid gap-px border border-line bg-line sm:grid-cols-4">
+            {
+              [
+                ["Payment history", "40%"],
+                ["Utilization", "30%"],
+                ["Account age", "15%"],
+                ["Defaults", "15%"],
+              ].map(([k, v]) => (
+                <div class="bg-surface px-5 py-6">
+                  <dt class="font-mono text-[10px] tracking-[0.2em] text-faint uppercase">{k}</dt>
+                  <dd class="text-gradient mt-2 font-display text-2xl font-black tracking-tight">{v}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hardening & performance -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="04" title="Hardening & Performance" ghost="Hardening" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          A money system is an attack surface. The same authoritative model that keeps the economy
+          fair is also what keeps it cheap to run at scale.
+        </p>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+          {
+            hardening.map((h, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.05}s`}
+                class="border border-line bg-surface/60 p-5"
+              >
+                <h3 class="font-display text-base font-bold tracking-tight text-ink">{h.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{h.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="05" title="Outcomes" ghost="Outcome" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          Shipped solo, in production, and built to scale — one resource that drops into whatever
+          framework the server already runs.
+        </p>
+
+        <div data-reveal class="mt-10 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {
+            [
+              ["Live", "in production and selling to server operators"],
+              ["Scale", "built and tuned for 200+ player servers"],
+              ["Framework-agnostic", "QBox, QBCore, and ESX from one resource"],
+            ].map(([k, v]) => (
+              <div class="bg-surface px-5 py-6">
+                <h3 class="text-gradient font-display text-xl font-black tracking-tight">{k}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{v}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-14 flex flex-wrap items-center gap-3">
+          <a
+            href="/#work"
+            class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            ← Back to work
+          </a>
+          <a
+            href="mailto:krisreed2001@gmail.com"
+            class="inline-block bg-accent px-5 py-2.5 font-mono text-sm font-semibold text-bg transition-all hover:bg-accent-soft hover:shadow-[0_0_32px_-6px_rgba(168,85,247,0.8)]"
+          >
+            Hire the whole pipeline
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
+      <p class="font-mono text-xs text-muted">© 2026 Kristepher Reed</p>
+      <a href="/" class="font-mono text-xs text-muted transition-colors hover:text-accent">
+        krisreed — portfolio
+      </a>
+    </div>
+  </footer>
+</Layout>

@@ -1,0 +1,141 @@
+---
+interface Entry {
+  title: string;
+  copy: string;
+  tags: string[];
+  image?: string;
+  link?: { href: string; label: string };
+}
+
+const entries: Entry[] = [
+  {
+    title: "Dragon Heart Studios",
+    copy: "Self-funded digital products studio, founded 2022 — $30k+ annual revenue, 1,000+ paying customers, a 2,000+ member community, and 30+ products shipped, every one designed, built, and supported solo.",
+    tags: ["Studio", "Full-stack", "E-commerce"],
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
+  },
+  {
+    title: "DHS-Minigames",
+    copy: "106-game NUI minigame library with an exports API and a theming engine — drop-in skill checks and arcade games for any resource.",
+    tags: ["React", "Lua", "NUI"],
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
+  },
+  {
+    title: "DHS Drug Economy",
+    copy: "A two-part drug economy — a grow/craft pipeline with strain genetics and crossbreeding, paired with a dynamic supply/demand street market with per-zone heat.",
+    tags: ["Lua", "NUI", "oxmysql"],
+  },
+  {
+    title: "DHS Job Catalog",
+    copy: "Fishing, Hunting, and Bees & Brews — standalone job systems with progression and economy, part of the live DHS catalogue.",
+    tags: ["Lua", "Multi-framework"],
+    image: "/fishingv2.webp",
+    link: { href: "https://dragonheartstudios.net/", label: "dragonheartstudios.net" },
+  },
+  {
+    title: "Tri-Loading",
+    copy: "Premium loading-screen framework — themed UI, animated backgrounds, asset-preload hooks, and progress tracking. Dual-edition release.",
+    tags: ["HTML/CSS", "JavaScript"],
+  },
+  {
+    title: "Tri-PauseMenu",
+    copy: "Pause-menu replacement — live player info, real-time job status, settings toggles, and social links. Built, release-ready.",
+    tags: ["Lua", "NUI"],
+  },
+  {
+    title: "tri-radio",
+    copy: "pma-voice radio replacement — item-based frequencies, channel encryption, battery/charging, and jammer interference on a clean framework bridge.",
+    tags: ["Lua", "pma-voice"],
+  },
+];
+
+const [lead, ...rest] = entries;
+---
+
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  <article
+    data-reveal
+    data-spotlight
+    class="group col-span-full border border-line bg-surface/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-surface hover:shadow-[0_0_60px_-15px_rgba(168,85,247,0.45)]"
+  >
+    {
+      lead.image && (
+        <img
+          src={lead.image}
+          alt={`${lead.title} screenshot`}
+          loading="lazy"
+          decoding="async"
+          class="mb-3 aspect-video w-full border border-line object-cover"
+        />
+      )
+    }
+    <h4 class="font-display text-xl font-bold tracking-tight text-ink">{lead.title}</h4>
+    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{lead.copy}</p>
+    <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+      {
+        lead.tags.map((tag) => (
+          <li class="border border-line bg-raised px-2.5 py-1 font-mono text-[10px] text-muted">
+            {tag}
+          </li>
+        ))
+      }
+    </ul>
+    {
+      lead.link && (
+        <a
+          href={lead.link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group/link mt-4 inline-flex items-center gap-2 font-mono text-xs text-accent-soft transition-colors hover:text-accent"
+        >
+          {lead.link.label}
+          <span aria-hidden="true" class="transition-transform group-hover/link:translate-x-1">
+            →
+          </span>
+        </a>
+      )
+    }
+  </article>
+
+  {
+    rest.map((entry) => (
+      <article
+        data-reveal
+        data-spotlight
+        class="group flex flex-col border border-line bg-surface/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-surface hover:shadow-[0_0_60px_-15px_rgba(168,85,247,0.45)]"
+      >
+        {entry.image && (
+          <img
+            src={entry.image}
+            alt={`${entry.title} screenshot`}
+            loading="lazy"
+            decoding="async"
+            class="mb-3 aspect-video w-full border border-line object-cover"
+          />
+        )}
+        <h4 class="font-display text-lg font-bold tracking-tight text-ink">{entry.title}</h4>
+        <p class="mt-2 text-sm leading-relaxed text-muted">{entry.copy}</p>
+        <ul class="mt-3 flex flex-wrap gap-2" aria-label="Technologies">
+          {entry.tags.map((tag) => (
+            <li class="border border-line bg-raised px-2.5 py-1 font-mono text-[10px] text-muted">
+              {tag}
+            </li>
+          ))}
+        </ul>
+        {entry.link && (
+          <a
+            href={entry.link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group/link mt-4 inline-flex items-center gap-2 font-mono text-xs text-accent-soft transition-colors hover:text-accent"
+          >
+            {entry.link.label}
+            <span aria-hidden="true" class="transition-transform group-hover/link:translate-x-1">
+              →
+            </span>
+          </a>
+        )}
+      </article>
+    ))
+  }
+</div>
