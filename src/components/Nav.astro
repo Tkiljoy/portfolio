@@ -2,7 +2,8 @@
 const links = [
   { href: "/#work", label: "Work" },
   { href: "/#journey", label: "Journey" },
-  { href: "/ux", label: "UX" },
+  { href: "/ux", label: "Prison UX", deep: true },
+  { href: "/banking", label: "Banking", deep: true },
   { href: "/#about", label: "About" },
   { href: "/#contact", label: "Contact" },
 ];
@@ -24,7 +25,10 @@ const links = [
         links.map((link) => (
           <a
             href={link.href}
-            class="font-mono text-xs tracking-wide text-muted transition-colors hover:text-ink"
+            class:list={[
+              "font-mono text-xs tracking-wide text-muted transition-colors hover:text-ink",
+              link.deep && "hidden sm:inline-block",
+            ]}
           >
             {link.label}
           </a>
