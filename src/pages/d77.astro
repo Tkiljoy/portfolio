@@ -1,0 +1,446 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+const pillars = [
+  {
+    n: "01",
+    title: "Next.js 15 + React 19",
+    body:
+      "App Router with a server action behind every mutation, server-rendered admin, and a public site gated by Discord OAuth. ~33,000 lines of TypeScript across 32 pages.",
+  },
+  {
+    n: "02",
+    title: "Postgres + Drizzle ORM",
+    body:
+      "20+ normalized tables with business rules enforced at the database — unique indexes for one-pending-application-per-user and idempotent detector scans. JSONB for knob values, event payloads, and queue snapshots.",
+  },
+  {
+    n: "03",
+    title: "Auth.js v5 + RBAC",
+    body:
+      "Discord OAuth on JWT sessions, with owner/admin roles re-checked against Discord on every admin request — never cached into a stale grant. Owners can override guardrails; admins stay clamped.",
+  },
+  {
+    n: "04",
+    title: "HMAC-signed game bridge",
+    body:
+      "Five stateless FiveM Lua resources pull config and push telemetry over HMAC-SHA256-signed endpoints with a 30-second clock-skew window. The game server holds no config of its own.",
+  },
+];
+
+const economy = [
+  {
+    title: "350+ typed knobs",
+    body: "Every economic value — job payouts, shop prices, crime rewards, passive income — is declared once in TypeScript with a type, a hard range, and the Lua path it maps to.",
+  },
+  {
+    title: "Tune from the web, live",
+    body: "Edits write to an economy_values table; the game reads them via GetKnob(id, fallback). Range-clamped, owner-overridable, and every change is audited with before/after.",
+  },
+  {
+    title: "What-if simulator",
+    body: "Replays 24h of real telemetry against proposed knob changes and projects the impact per player archetype — grinder, roleplayer, mixed — with backtesting and saved scenarios.",
+  },
+  {
+    title: "Farm detector",
+    body: "37 contract rules plus per-hour-of-week statistical baselines flag anomalous earning. Idempotent scans, severity tiers, and a one-click flag-to-ban path.",
+  },
+];
+
+const platform = [
+  {
+    title: "Priority + reserved slots",
+    body: "A data-driven tier ladder mapped to Discord roles — plus Tebex, manual, and playtime grants — with per-role reserved-slot buckets and live capacity math feeding the in-game queue.",
+  },
+  {
+    title: "Applications pipeline",
+    body: "Configurable application types and a question builder, a multi-reviewer workflow (notes, tags, vouches), Discord role grants on approval, and reapply cooldowns.",
+  },
+  {
+    title: "Live queue & telemetry",
+    body: "A 2-second heartbeat drives live queue position and a server-online indicator; Recharts dashboards visualize 24h economy flows by event type.",
+  },
+  {
+    title: "Audit everything",
+    body: "An append-only audit log records actor, action, and before/after JSON for every sensitive mutation — approvals, bans, role grants, knob edits.",
+  },
+];
+---
+
+<Layout
+  title="District 77 — Case Study — Kristepher Reed"
+  description="Engineering case study: a Next.js 15 + Postgres control-plane that runs a FiveM roleplay server — queue, applications, and a live economy console wired to the game over signed APIs."
+>
+  <Nav />
+  <main id="main">
+    <!-- Intro -->
+    <section class="relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent)]"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-40 right-[-15%] h-[30rem] w-[30rem] rounded-full opacity-20 blur-3xl"
+        style="background: radial-gradient(closest-side, #8b5cf6, transparent 70%);"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute top-20 left-[-15%] h-[26rem] w-[26rem] rounded-full opacity-15 blur-3xl"
+        style="background: radial-gradient(closest-side, #e879f9, transparent 70%);"
+      >
+      </div>
+      <div class="relative mx-auto max-w-5xl px-5 pt-32 pb-12 sm:px-8 sm:pt-40 sm:pb-16">
+        <p data-reveal class="font-mono text-xs tracking-[0.25em] text-accent uppercase">
+          Case Study
+        </p>
+        <h1
+          data-reveal
+          style="--reveal-delay: 0.08s"
+          class="mt-4 font-display text-4xl leading-[0.95] font-black tracking-tight text-ink sm:text-6xl md:text-7xl"
+        >
+          District 77<span class="text-gradient">.</span>
+        </h1>
+        <p
+          data-reveal
+          style="--reveal-delay: 0.16s"
+          class="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+        >
+          Not a forum — a production control-plane for a live multiplayer roleplay server. A
+          Next.js 15 / React 19 / Postgres platform that onboards players, runs a fair queue, and
+          tunes the game's entire economy from the browser. ~33,000 lines, solo.
+        </p>
+        <dl
+          data-reveal
+          style="--reveal-delay: 0.24s"
+          class="mt-8 grid max-w-2xl grid-cols-2 gap-px border border-line bg-line sm:grid-cols-4"
+        >
+          {
+            [
+              ["Role", "Lead — full-stack"],
+              ["Stack", "Next.js · Postgres"],
+              ["Scale", "~33k LOC · 32 pages"],
+              ["Status", "Live build"],
+            ].map(([dt, dd]) => (
+              <div class="bg-surface px-4 py-3">
+                <dt class="font-mono text-[10px] tracking-[0.2em] text-faint uppercase">{dt}</dt>
+                <dd class="mt-1 font-mono text-xs text-ink">{dd}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <img
+          data-reveal
+          style="--reveal-delay: 0.32s"
+          src="/d77.webp"
+          alt="District 77 — the JACK IN landing page on district77rp.net"
+          width="2539"
+          height="1271"
+          loading="eager"
+          class="mt-10 aspect-video w-full border border-line object-cover bg-surface/60"
+        />
+      </div>
+    </section>
+
+    <!-- The Problem -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="01" title="The Problem" ghost="Problem" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          A serious roleplay server is a small live game with real users and a real economy — and
+          most run on a Discord server, a spreadsheet, and hope. Onboarding, allowlisting, a fair
+          queue, payouts, anti-cheat, and config changes are all manual, and every economy tweak
+          means SSHing in to edit Lua and restarting.
+        </p>
+        <p data-reveal style="--reveal-delay: 0.08s" class="mt-5 max-w-2xl leading-relaxed text-muted">
+          District 77 is the platform that runs all of it from one place — and stays wired to the
+          live game server so a change in the browser reaches the world without a deploy.
+        </p>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="02" title="Architecture" ghost="System" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          One Next.js app is the control-plane; the game server is a thin client that pulls config
+          and pushes telemetry over signed APIs. Postgres is the single source of truth.
+        </p>
+        <div data-reveal class="mt-10 overflow-x-auto border border-line bg-surface/40 p-4 sm:p-6">
+          <svg
+            viewBox="0 0 1320 430"
+            class="min-w-[920px]"
+            role="img"
+            aria-label="Architecture diagram: a player signs in with Discord OAuth to the Next.js 15 web app, which reads and writes Postgres through Drizzle. The web app exposes HMAC-signed /api/fivem endpoints. The FiveM server's five Lua resources pull config (economy knobs, queue, stores) from those endpoints and push telemetry (economy events, queue snapshots) back, which the API persists to Postgres. The FiveM server renders the in-game NUI — character, augments, and HUD."
+          >
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#a855f7"></path>
+              </marker>
+              <marker id="arrhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#e879f9"></path>
+              </marker>
+            </defs>
+            <style>
+              .node { fill: #120b20; stroke: #2b1c47; stroke-width: 1.5; rx: 6; }
+              .node-accent { stroke: #a855f7; }
+              .node-hot { stroke: #e879f9; stroke-dasharray: 5 4; }
+              .lbl { fill: #ece7f8; font: 600 15px "JetBrains Mono Variable", monospace; }
+              .sub { fill: #a89bc7; font: 400 11px "JetBrains Mono Variable", monospace; }
+              .edge { stroke: #a855f7; stroke-width: 1.5; fill: none; opacity: 0.7; }
+              .edge-hot { stroke: #e879f9; stroke-width: 1.5; fill: none; opacity: 0.7; stroke-dasharray: 5 4; }
+              .tag { fill: #6f5f93; font: 400 10px "JetBrains Mono Variable", monospace; letter-spacing: 0.1em; }
+            </style>
+
+            <!-- discord + player -->
+            <rect class="node" x="20" y="40" width="170" height="58" rx="6"></rect>
+            <text class="lbl" x="42" y="66">DISCORD</text>
+            <text class="sub" x="42" y="84">OAuth · roles</text>
+
+            <rect class="node" x="20" y="186" width="170" height="58" rx="6"></rect>
+            <text class="lbl" x="42" y="212">PLAYER</text>
+            <text class="sub" x="42" y="230">browser</text>
+
+            <line class="edge" x1="190" y1="69" x2="256" y2="120" marker-end="url(#arr)"></line>
+            <line class="edge" x1="190" y1="215" x2="256" y2="170" marker-end="url(#arr)"></line>
+
+            <!-- web -->
+            <rect class="node node-accent" x="260" y="92" width="240" height="150" rx="6"></rect>
+            <text class="lbl" x="282" y="120">NEXT.JS 15 WEB</text>
+            <text class="sub" x="282" y="140">App Router · server actions</text>
+            <text class="sub" x="282" y="158">NextAuth · RBAC</text>
+            <text class="sub" x="282" y="176">applications · queue · admin</text>
+            <text class="tag" x="260" y="82">CONTROL-PLANE</text>
+
+            <!-- postgres -->
+            <rect class="node node-accent" x="260" y="300" width="240" height="64" rx="6"></rect>
+            <text class="lbl" x="282" y="328">POSTGRES</text>
+            <text class="sub" x="282" y="346">Drizzle ORM · 20+ tables</text>
+            <text class="tag" x="260" y="290">SOURCE OF TRUTH</text>
+
+            <line class="edge" x1="380" y1="242" x2="380" y2="296" marker-end="url(#arr)"></line>
+            <text class="tag" x="392" y="276">read / write</text>
+
+            <!-- hmac api -->
+            <line class="edge" x1="500" y1="150" x2="556" y2="150" marker-end="url(#arr)"></line>
+            <rect class="node node-accent" x="560" y="110" width="200" height="92" rx="6"></rect>
+            <text class="lbl" x="582" y="138">HMAC API</text>
+            <text class="sub" x="582" y="156">/api/fivem/*</text>
+            <text class="sub" x="582" y="174">SHA-256 signed</text>
+            <text class="tag" x="560" y="100">SIGNED BRIDGE</text>
+
+            <!-- fivem -->
+            <line class="edge" x1="760" y1="142" x2="816" y2="142" marker-end="url(#arr)"></line>
+            <text class="tag" x="768" y="132">config</text>
+            <line class="edge-hot" x1="816" y1="176" x2="760" y2="176" marker-end="url(#arrhot)"></line>
+            <text class="tag" x="768" y="196">telemetry</text>
+
+            <rect class="node node-accent" x="820" y="92" width="240" height="150" rx="6"></rect>
+            <text class="lbl" x="842" y="120">FIVEM SERVER</text>
+            <text class="sub" x="842" y="140">5 Lua resources</text>
+            <text class="sub" x="842" y="158">queue · economy · stores</text>
+            <text class="sub" x="842" y="176">logger · jobsession</text>
+            <text class="tag" x="820" y="82">THIN CLIENT</text>
+
+            <!-- telemetry persisted -->
+            <path class="edge-hot" d="M620,202 C 620,330 540,330 502,332" marker-end="url(#arrhot)"></path>
+            <text class="tag" x="600" y="318">persists events</text>
+
+            <!-- in-game nui -->
+            <rect class="node" x="820" y="300" width="240" height="64" rx="6"></rect>
+            <text class="lbl" x="842" y="328">IN-GAME NUI</text>
+            <text class="sub" x="842" y="346">character · augments · HUD</text>
+            <line class="edge" x1="940" y1="242" x2="940" y2="296" marker-end="url(#arr)"></line>
+            <text class="tag" x="952" y="276">renders</text>
+          </svg>
+        </div>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {
+            pillars.map((p, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <span class="font-mono text-xs text-accent">Layer {p.n}</span>
+                <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+                  {p.title}
+                </h3>
+                <p class="mt-3 text-sm leading-relaxed text-muted">{p.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Economy control-plane -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="03" title="The Economy Console" ghost="Economy" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          The centerpiece: a browser console that owns the game's entire economy. Values live as
+          typed knobs in code, are tuned in the UI, and reach the running server over the signed
+          bridge — with a simulator to predict the change and a detector to catch abuse of it.
+        </p>
+        <img
+          data-reveal
+          src="/d77-economy.webp"
+          alt="District 77 economy tuning console — 39 registered knobs across jobs, shops, crime, passive income, and core economy"
+          loading="lazy"
+          decoding="async"
+          width="1290"
+          height="913"
+          class="mt-8 w-full border border-line bg-surface/60"
+        />
+        <div class="mt-10 grid gap-6 sm:grid-cols-2">
+          {
+            economy.map((e, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <h3 class="font-display text-lg font-bold tracking-tight text-ink">{e.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{e.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="04" title="The Platform" ghost="Platform" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          Around the economy sits everything a live community needs to run itself — onboarding, a
+          fair queue, review workflows, and an audit trail over all of it.
+        </p>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2">
+          {
+            platform.map((p, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <h3 class="font-display text-lg font-bold tracking-tight text-ink">{p.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- In-game layer -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="05" title="The In-Game Layer" ghost="In-Game" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          The same project reaches into the game itself — custom FiveM NUI built in the same
+          cyberpunk system as the web: a character loadout and a Deus-Ex-style augment grid with a
+          power budget and tiered slots.
+        </p>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2">
+          <figure data-reveal class="border border-line bg-surface/60 p-4">
+            <img
+              src="/d77-character.webp"
+              alt="District 77 in-game character loadout: helmet, mask, armor, and backpack slots"
+              loading="lazy"
+              decoding="async"
+              width="1099"
+              height="1252"
+              class="w-full border border-line"
+            />
+            <figcaption class="mt-3 font-mono text-xs text-muted">
+              <span class="text-accent">In-game NUI</span> · character loadout
+            </figcaption>
+          </figure>
+          <figure data-reveal style="--reveal-delay: 0.07s" class="border border-line bg-surface/60 p-4">
+            <img
+              src="/d77-augments.webp"
+              alt="District 77 in-game augments grid with power budget and tiered slots"
+              loading="lazy"
+              decoding="async"
+              width="1141"
+              height="1229"
+              class="w-full border border-line"
+            />
+            <figcaption class="mt-3 font-mono text-xs text-muted">
+              <span class="text-accent">In-game NUI</span> · augments + power budget
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="06" title="Outcomes" ghost="Outcome" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          A single codebase that spans a modern web app and a live game server — built, secured,
+          and run solo.
+        </p>
+
+        <div data-reveal class="mt-10 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {
+            [
+              ["Full-stack", "web control-plane + 5 game resources, one codebase"],
+              ["Production", "the platform behind a 1,000+ member community"],
+              ["Secured", "HMAC-signed game APIs, RBAC re-checked per request"],
+            ].map(([k, v]) => (
+              <div class="bg-surface px-5 py-6">
+                <h3 class="text-gradient font-display text-xl font-black tracking-tight">{k}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{v}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-14 flex flex-wrap items-center gap-3">
+          <a
+            href="/case-studies"
+            class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            ← All case studies
+          </a>
+          <a
+            href="https://district77rp.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            Visit district77rp.net ↗
+          </a>
+          <a
+            href="mailto:krisreed2001@gmail.com"
+            class="inline-block bg-accent px-5 py-2.5 font-mono text-sm font-semibold text-bg transition-all hover:bg-accent-soft hover:shadow-[0_0_32px_-6px_rgba(168,85,247,0.8)]"
+          >
+            Hire the whole pipeline
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
+      <p class="font-mono text-xs text-muted">© 2026 Kristepher Reed</p>
+      <a href="/" class="font-mono text-xs text-muted transition-colors hover:text-accent">
+        krisreed — portfolio
+      </a>
+    </div>
+  </footer>
+</Layout>
