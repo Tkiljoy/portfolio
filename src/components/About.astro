@@ -1,0 +1,40 @@
+---
+const stack = ["JavaScript / TypeScript", "React", "Lua", "Python", "SQL"];
+---
+
+<section id="about" class="scroll-mt-14">
+  <div class="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
+    <h2
+      data-reveal
+      class="mb-10 font-mono text-sm tracking-[0.2em] text-ember uppercase sm:mb-14"
+    >
+      / About
+    </h2>
+
+    <div class="grid gap-10 md:grid-cols-[1fr_16rem] md:gap-16">
+      <p data-reveal class="max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
+        Self-taught over a decade, professional for six years, with coursework at Neumont College
+        of Computer Science. I've spent my whole career as the only engineer in the room — which
+        means I work from a brief, ship without hand-holding, and build things non-engineers can
+        sign off on. Currently deep in AI-assisted development: agent pipelines, automation, and
+        LLM apps.
+      </p>
+
+      <div data-reveal style="--reveal-delay: 0.1s">
+        <h3 class="font-mono text-xs tracking-[0.2em] text-faint uppercase">Core stack</h3>
+        <ul class="mt-4 space-y-2.5">
+          {
+            stack.map((item) => (
+              <li class="flex items-baseline gap-3 font-mono text-sm text-ink">
+                <span aria-hidden="true" class="text-ember">
+                  /
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

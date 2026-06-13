@@ -1,0 +1,77 @@
+---
+const links = [
+  { href: "https://github.com/Tkiljoy", label: "GitHub", external: true },
+  { href: "https://www.linkedin.com/in/kristepher-reed", label: "LinkedIn", external: true },
+  { href: "mailto:krisreed2001@gmail.com", label: "Email", external: false },
+];
+---
+
+<section id="top" class="relative overflow-hidden">
+  <!-- Ember glow, top-right. Decorative only. -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-40 right-[-20%] h-[34rem] w-[34rem] rounded-full opacity-[0.13] blur-3xl"
+    style="background: radial-gradient(closest-side, #ff5a2d, transparent 70%);"
+  >
+  </div>
+
+  <div class="mx-auto max-w-5xl px-5 pt-36 pb-20 sm:px-8 sm:pt-44 sm:pb-28">
+    <p
+      data-reveal
+      class="mb-6 inline-flex items-center gap-2.5 border border-line bg-surface px-3 py-1.5 font-mono text-xs text-muted"
+    >
+      <span class="relative inline-block h-1.5 w-1.5 rounded-full bg-ember pulse-dot"></span>
+      Remote · South Dakota · Available immediately
+    </p>
+
+    <h1
+      data-reveal
+      style="--reveal-delay: 0.08s"
+      class="font-display text-5xl leading-[0.95] font-extrabold tracking-tight text-ink sm:text-7xl md:text-8xl"
+    >
+      Kristepher<br />Reed<span class="text-ember">.</span>
+    </h1>
+
+    <p
+      data-reveal
+      style="--reveal-delay: 0.16s"
+      class="mt-8 font-mono text-sm leading-relaxed text-ember sm:text-base"
+    >
+      Full-Stack Developer <span class="text-faint">·</span> Game Systems Engineer
+      <span class="text-faint">·</span> AI Automation Builder
+    </p>
+
+    <p
+      data-reveal
+      style="--reveal-delay: 0.24s"
+      class="mt-4 max-w-xl text-lg leading-relaxed text-muted sm:text-xl"
+    >
+      I build production software people pay for — solo, end-to-end, for six years.
+    </p>
+
+    <ul data-reveal style="--reveal-delay: 0.32s" class="mt-10 flex flex-wrap items-center gap-3">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-ember hover:text-ember"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a
+          href="/resume.pdf"
+          download="Kristepher-Reed-Resume.pdf"
+          class="inline-block bg-ember px-4 py-2 font-mono text-sm font-medium text-bg transition-colors hover:bg-ember-soft"
+        >
+          Resume ↓
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>

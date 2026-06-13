@@ -1,0 +1,64 @@
+---
+import "../styles/global.css";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/instrument-sans";
+import "@fontsource-variable/jetbrains-mono";
+
+const title = "Kristepher Reed — Full-Stack Developer";
+const description =
+  "Full-stack developer and game systems engineer. Six years shipping production software solo — commercial game systems, community platforms, and AI automation.";
+const site = Astro.site ?? new URL("https://portfolio-tkiljoy.vercel.app");
+const ogImage = new URL("/og.png", site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={site.href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={site.href} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
+    <meta name="theme-color" content="#0b0a08" />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-ember focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-bg"
+    >
+      Skip to content
+    </a>
+    <slot />
+    <script>
+      // Reveal-on-scroll. Elements start hidden only when motion is allowed
+      // (see global.css), so this is purely additive.
+      const targets = document.querySelectorAll("[data-reveal]");
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.12 },
+      );
+      targets.forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

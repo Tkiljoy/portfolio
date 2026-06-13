@@ -1,0 +1,69 @@
+---
+import WorkCard from "./WorkCard.astro";
+
+const projects = [
+  {
+    title: "Prison Simulation System",
+    meta: "Live Commercial Product · 2025",
+    tags: ["Lua", "JavaScript", "SQL", "HTML/CSS"],
+    copy: "Complete gameplay loop with progression, persistence, and economy systems — designed, built, and shipped solo. Sold to paying server operators and running in production on live multiplayer platforms.",
+    asset: "Gameplay screenshot / clip",
+    link: { href: "https://store.dragonheartstudios.net", label: "store.dragonheartstudios.net" },
+  },
+  {
+    title: "District 77 Community Platform",
+    meta: "Full Build · 2023",
+    tags: ["React", "JavaScript", "HTML/CSS"],
+    copy: "Combined forum and e-commerce store for a 1,000+ member multiplayer community. Built from scratch — no CMS, no templates.",
+    asset: "Platform screenshots",
+    link: { href: "https://github.com/Tkiljoy", label: "View on GitHub" },
+  },
+  {
+    title: "DHS-Lair",
+    meta: "AI Desktop Assistant · In Development · 2026",
+    tags: ["Electron", "Python FastAPI", "faster-whisper", "ElevenLabs", "Claude API"],
+    copy: "JARVIS-style assistant with real-time voice I/O and an LLM reasoning core in a cross-platform desktop shell. Built entirely self-directed.",
+    asset: "Voice interaction demo clip",
+    link: { href: "https://github.com/Tkiljoy", label: "View on GitHub" },
+  },
+  {
+    title: "ReeMain Automations",
+    meta: "AI Automation Studio · 2026",
+    tags: ["n8n", "Claude API", "OpenAI API", "MCP"],
+    copy: "27 production automation workflows for SMB clients.",
+    caseStudies: [
+      {
+        title: "Smart inbox",
+        detail: "inbound email scored, summarized, and routed automatically.",
+      },
+      {
+        title: "Lead qualification",
+        detail: "enquiries enriched and prioritized before a human ever reads them.",
+      },
+      {
+        title: "Invoice automation",
+        detail: "end-to-end generation and follow-up with zero manual steps.",
+      },
+    ],
+  },
+  {
+    title: "Dragon Heart Studios",
+    meta: "Founded 2022",
+    tags: ["Full-stack", "Product", "E-commerce"],
+    copy: "Self-funded digital products studio. $30,000+ annual revenue, 1,000+ paying customers, 2,000+ member community. Every product designed, built, shipped, and supported by one person.",
+    link: { href: "https://store.dragonheartstudios.net", label: "store.dragonheartstudios.net" },
+  },
+];
+---
+
+<section id="work" class="scroll-mt-14">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8">
+    <h2
+      data-reveal
+      class="mb-10 font-mono text-sm tracking-[0.2em] text-ember uppercase sm:mb-14"
+    >
+      / Featured Work
+    </h2>
+    {projects.map((project, i) => <WorkCard index={i + 1} {...project} />)}
+  </div>
+</section>
