@@ -68,10 +68,66 @@ body::after {
   color: transparent;
 }
 
-/* Outlined ghost text */
-.text-outline {
+/* Animated gradient headline text */
+.text-gradient-anim {
+  background: linear-gradient(100deg, #8b5cf6, #c084fc 30%, #e879f9 50%, #c084fc 70%, #8b5cf6);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--color-ink) 75%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .text-gradient-anim {
+    animation: gradient-pan 6s linear infinite;
+  }
+  @keyframes gradient-pan {
+    to {
+      background-position: 200% 0;
+    }
+  }
+}
+
+/* Giant outlined watermark words behind section headings */
+.text-ghost {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(168 85 247 / 0.16);
+}
+
+/* Hero title line-rise on load */
+@media (prefers-reduced-motion: no-preference) {
+  .title-line {
+    transform: translateY(110%);
+    animation: title-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .title-line-2 {
+    animation-delay: 0.12s;
+  }
+  @keyframes title-rise {
+    to {
+      transform: none;
+    }
+  }
+}
+
+/* Mouse-tracking spotlight on cards */
+[data-spotlight] {
+  position: relative;
+}
+[data-spotlight]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    550px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(168 85 247 / 0.12),
+    transparent 45%
+  );
+}
+[data-spotlight]:hover::after {
+  opacity: 1;
 }
 
 /* Blueprint grid */

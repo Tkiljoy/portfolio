@@ -1,10 +1,13 @@
 ---
+import SectionHeading from "./SectionHeading.astro";
+
 // Dates/figures marked [verify] are best guesses — Kris to confirm.
+// `count` drives the count-up animation; prefix/suffix/format shape the text.
 const stats = [
-  { value: "6+", label: "years professional" },
-  { value: "30+", label: "products shipped" }, // [verify]
-  { value: "$30k+", label: "annual revenue" },
-  { value: "1,000+", label: "paying customers" },
+  { count: 6, suffix: "+", label: "years professional" },
+  { count: 30, suffix: "+", label: "products shipped" }, // [verify]
+  { count: 30, prefix: "$", suffix: "k+", label: "annual revenue" },
+  { count: 1000, suffix: "+", format: "comma", label: "paying customers" },
 ];
 
 const milestones = [
@@ -56,12 +59,7 @@ const milestones = [
   </div>
 
   <div class="relative mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
-    <div data-reveal class="mb-10 flex flex-wrap items-baseline gap-x-5 gap-y-2 sm:mb-14">
-      <span class="font-mono text-sm text-accent">(02)</span>
-      <h2 class="font-display text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
-        The Road Here
-      </h2>
-    </div>
+    <SectionHeading num="02" title="The Road Here" ghost="Road" />
 
     <!-- Stat strip -->
     <dl
@@ -71,8 +69,14 @@ const milestones = [
       {
         stats.map((stat) => (
           <div class="bg-surface px-5 py-6 sm:px-7 sm:py-8">
-            <dd class="text-gradient font-display text-3xl font-black tracking-tight sm:text-5xl">
-              {stat.value}
+            <dd
+              class="text-gradient font-display text-3xl font-black tracking-tight sm:text-5xl"
+              data-countup={stat.count}
+              data-prefix={stat.prefix}
+              data-suffix={stat.suffix}
+              data-format={stat.format}
+            >
+              {stat.prefix}{stat.format === "comma" ? stat.count.toLocaleString("en-US") : stat.count}{stat.suffix}
             </dd>
             <dt class="mt-2 font-mono text-xs tracking-wide text-muted uppercase">{stat.label}</dt>
           </div>

@@ -28,6 +28,8 @@ const ticker = [
     class="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_0%,black,transparent)]"
   >
   </div>
+  <!-- Particle network -->
+  <canvas id="hero-net" aria-hidden="true" class="absolute inset-0 h-full w-full"></canvas>
   <!-- Glow blobs -->
   <div
     aria-hidden="true"
@@ -52,11 +54,12 @@ const ticker = [
     </p>
 
     <h1
-      data-reveal
-      style="--reveal-delay: 0.08s"
       class="font-display text-5xl leading-[0.92] font-black tracking-tight text-ink uppercase sm:text-8xl md:text-[7.5rem]"
     >
-      Kristepher<br /><span class="text-gradient">Reed.</span>
+      <span class="block overflow-hidden"><span class="title-line block">Kristepher</span></span>
+      <span class="block overflow-hidden">
+        <span class="title-line title-line-2 text-gradient-anim block pb-2">Reed.</span>
+      </span>
     </h1>
 
     <p
@@ -64,8 +67,11 @@ const ticker = [
       style="--reveal-delay: 0.16s"
       class="mt-9 font-mono text-sm leading-relaxed text-accent-soft uppercase sm:text-base"
     >
-      Full-Stack Developer <span aria-hidden="true" class="text-accent">//</span> Game Systems
-      Engineer <span aria-hidden="true" class="text-accent">//</span> AI Automation Builder
+      <span data-scramble>Full-Stack Developer</span>
+      <span aria-hidden="true" class="text-accent">//</span>
+      <span data-scramble>Game Systems Engineer</span>
+      <span aria-hidden="true" class="text-accent">//</span>
+      <span data-scramble>AI Automation Builder</span>
     </p>
 
     <p
@@ -120,3 +126,130 @@ const ticker = [
     </div>
   </div>
 </section>
+
+<script>
+  // Particle constellation in the hero. Skipped entirely under
+  // prefers-reduced-motion; paused while the hero is offscreen.
+  const canvas = document.getElementById("hero-net") as HTMLCanvasElement | null;
+  if (canvas && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const LINK_DIST = 120;
+      const MOUSE_R = 150;
+      let w = 0;
+      let h = 0;
+      let raf = 0;
+      let running = false;
+      const mouse = { x: -9999, y: -9999 };
+
+      type P = { x: number; y: number; vx: number; vy: number; r: number; hot: boolean };
+      let particles: P[] = [];
+
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        w = rect.width;
+        h = rect.height;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = w < 640 ? 32 : 72;
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 1.4 + 0.8,
+          hot: Math.random() < 0.18,
+        }));
+      };
+
+      const step = () => {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          // gentle repulsion from the cursor
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < MOUSE_R * MOUSE_R && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            const f = ((MOUSE_R - d) / MOUSE_R) * 0.6;
+            p.x += (dx / d) * f;
+            p.y += (dy / d) * f;
+          }
+          if (p.x < 0) p.x += w;
+          if (p.x > w) p.x -= w;
+          if (p.y < 0) p.y += h;
+          if (p.y > h) p.y -= h;
+        }
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i];
+            const b = particles[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < LINK_DIST * LINK_DIST) {
+              const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.22;
+              ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+        for (const p of particles) {
+          ctx.fillStyle = p.hot ? "rgba(232, 121, 249, 0.85)" : "rgba(201, 168, 255, 0.65)";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        raf = requestAnimationFrame(step);
+      };
+
+      const section = canvas.closest("section");
+      section?.addEventListener(
+        "pointermove",
+        (e) => {
+          const rect = canvas.getBoundingClientRect();
+          mouse.x = e.clientX - rect.left;
+          mouse.y = e.clientY - rect.top;
+        },
+        { passive: true },
+      );
+      section?.addEventListener("pointerleave", () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      new IntersectionObserver((entries) => {
+        const visible = entries[0]?.isIntersecting ?? false;
+        if (visible && !running) {
+          running = true;
+          raf = requestAnimationFrame(step);
+        } else if (!visible && running) {
+          running = false;
+          cancelAnimationFrame(raf);
+        }
+      }).observe(canvas);
+
+      // Size immediately, then let ResizeObserver correct it once layout
+      // settles (load-time layout can report a 0-width canvas) and on
+      // window resizes. The timer retry covers environments where RO
+      // callbacks are throttled or suspended.
+      resize();
+      if (canvas.width === 0) {
+        const retry = setInterval(() => {
+          resize();
+          if (canvas.width > 0) clearInterval(retry);
+        }, 150);
+        setTimeout(() => clearInterval(retry), 5000);
+      }
+      new ResizeObserver(() => resize()).observe(canvas);
+    }
+  }
+</script>

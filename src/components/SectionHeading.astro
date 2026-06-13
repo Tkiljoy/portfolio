@@ -1,0 +1,24 @@
+---
+interface Props {
+  num: string;
+  title: string;
+  ghost: string; // giant outlined watermark word behind the heading
+}
+
+const { num, title, ghost } = Astro.props;
+---
+
+<div data-reveal class="relative mb-10 sm:mb-14">
+  <span
+    aria-hidden="true"
+    class="text-ghost pointer-events-none absolute -top-6 -left-1 font-display text-[clamp(4.5rem,16vw,11rem)] leading-none font-black tracking-tight uppercase select-none sm:-top-10"
+  >
+    {ghost}
+  </span>
+  <div class="relative flex flex-wrap items-baseline gap-x-5 gap-y-2 pt-8 sm:pt-14">
+    <span class="font-mono text-sm text-accent">({num})</span>
+    <h2 class="font-display text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
+      {title}
+    </h2>
+  </div>
+</div>
