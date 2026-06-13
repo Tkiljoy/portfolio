@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Warm near-black palette — ember accent */
-  --color-bg: #0b0a08;
-  --color-surface: #131110;
-  --color-raised: #1b1815;
-  --color-line: #262019;
-  --color-ink: #ece8e1;
-  --color-muted: #a29a8e;
-  --color-faint: #6f675c;
-  --color-ember: #ff5a2d;
-  --color-ember-soft: #ffb39b;
+  /* Violet-black palette — electric purple accent */
+  --color-bg: #0b0613;
+  --color-surface: #120b20;
+  --color-raised: #1a112d;
+  --color-line: #2b1c47;
+  --color-ink: #ece7f8;
+  --color-muted: #a89bc7;
+  --color-faint: #6f5f93;
+  --color-accent: #a855f7;
+  --color-accent-soft: #c9a8ff;
+  --color-violet: #8b5cf6;
+  --color-hot: #e879f9;
 
   --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
@@ -36,25 +38,77 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Film grain over everything — texture kills the "flat template" look */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
 ::selection {
-  background-color: var(--color-ember);
+  background-color: var(--color-accent);
   color: var(--color-bg);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ember);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* Gradient headline text */
+.text-gradient {
+  background: linear-gradient(100deg, #8b5cf6, #c084fc 45%, #e879f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Outlined ghost text */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--color-ink) 75%, transparent);
+}
+
+/* Blueprint grid */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(168 85 247 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(168 85 247 / 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* Skills ticker */
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee 36s linear infinite;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 /* Scroll-reveal — opt-in via data-reveal, no-op when motion is reduced */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(18px);
     transition:
-      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0s);
   }
   [data-reveal].is-visible {
@@ -70,7 +124,7 @@ body {
     position: absolute;
     inset: 0;
     border-radius: 9999px;
-    background-color: var(--color-ember);
+    background-color: var(--color-accent);
     animation: pulse-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   }
   @keyframes pulse-ring {
@@ -92,7 +146,7 @@ body {
     -45deg,
     transparent,
     transparent 10px,
-    rgb(255 255 255 / 0.025) 10px,
-    rgb(255 255 255 / 0.025) 11px
+    rgb(168 85 247 / 0.05) 10px,
+    rgb(168 85 247 / 0.05) 11px
   );
 }

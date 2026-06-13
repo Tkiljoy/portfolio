@@ -56,14 +56,14 @@ const projects = [
 ];
 ---
 
-<section id="work" class="scroll-mt-14">
+<section id="work" class="scroll-mt-14 pt-20 sm:pt-28">
   <div class="mx-auto max-w-5xl px-5 sm:px-8">
-    <h2
-      data-reveal
-      class="mb-10 font-mono text-sm tracking-[0.2em] text-ember uppercase sm:mb-14"
-    >
-      / Featured Work
-    </h2>
+    <div data-reveal class="mb-10 flex flex-wrap items-baseline gap-x-5 gap-y-2 sm:mb-14">
+      <span class="font-mono text-sm text-accent">(01)</span>
+      <h2 class="font-display text-4xl font-extrabold tracking-tight text-ink sm:text-6xl">
+        Featured Work
+      </h2>
+    </div>
     {projects.map((project, i) => <WorkCard index={i + 1} {...project} />)}
   </div>
 </section>

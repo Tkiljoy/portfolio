@@ -19,11 +19,19 @@ const { index, title, meta, tags, copy, link, asset, caseStudies } = Astro.props
 const number = String(index).padStart(2, "0");
 ---
 
-<article data-reveal class="border-t border-line py-12 sm:py-16">
+<article
+  data-reveal
+  class="group mb-6 border border-line bg-surface/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-surface hover:shadow-[0_0_60px_-15px_rgba(168,85,247,0.45)] sm:p-10"
+>
   <div class="grid gap-6 md:grid-cols-[8rem_1fr] md:gap-10">
     <div class="flex items-baseline gap-4 md:block">
-      <span aria-hidden="true" class="font-display text-2xl font-bold text-faint">{number}</span>
-      <p class="font-mono text-xs leading-relaxed text-ember md:mt-3">{meta}</p>
+      <span
+        aria-hidden="true"
+        class="font-display text-3xl font-black text-faint transition-colors duration-300 group-hover:text-accent"
+      >
+        {number}
+      </span>
+      <p class="font-mono text-xs leading-relaxed text-accent-soft md:mt-3">{meta}</p>
     </div>
 
     <div>
@@ -34,7 +42,7 @@ const number = String(index).padStart(2, "0");
       <ul class="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
         {
           tags.map((tag) => (
-            <li class="border border-line bg-surface px-2.5 py-1 font-mono text-[11px] text-muted">
+            <li class="border border-line bg-raised px-2.5 py-1 font-mono text-[11px] text-muted">
               {tag}
             </li>
           ))
@@ -47,7 +55,7 @@ const number = String(index).padStart(2, "0");
         caseStudies && (
           <ul class="mt-6 max-w-2xl space-y-3">
             {caseStudies.map((cs) => (
-              <li class="border-l-2 border-ember/60 pl-4">
+              <li class="border-l-2 border-accent/60 pl-4">
                 <span class="font-medium text-ink">{cs.title}:</span>
                 <span class="text-muted"> {cs.detail}</span>
               </li>
@@ -59,7 +67,7 @@ const number = String(index).padStart(2, "0");
       {
         asset && (
           <div
-            class="hatch mt-7 flex aspect-video max-w-2xl items-center justify-center border border-dashed border-line bg-surface"
+            class="hatch mt-7 flex aspect-video max-w-2xl items-center justify-center border border-dashed border-line bg-raised/50"
             role="img"
             aria-label={`${title} — ${asset} coming soon`}
           >
@@ -74,10 +82,10 @@ const number = String(index).padStart(2, "0");
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="group mt-7 inline-flex items-center gap-2 font-mono text-sm text-ink transition-colors hover:text-ember"
+            class="group/link mt-7 inline-flex items-center gap-2 font-mono text-sm text-ink transition-colors hover:text-accent"
           >
             {link.label}
-            <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">
+            <span aria-hidden="true" class="transition-transform group-hover/link:translate-x-1">
               →
             </span>
           </a>
