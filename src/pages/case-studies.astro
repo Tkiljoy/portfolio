@@ -1,0 +1,134 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+// Add new case studies here — the page renders them automatically.
+const studies = [
+  {
+    title: "DHS-BankingSim",
+    kind: "Engineering deep-dive",
+    blurb:
+      "How a full banking economy — player-owned banks, cards with PINs, a credit engine, loans, a POS suite, and a fraud engine — was built server-authoritative and tuned to survive 200+ players on a single resource.",
+    tags: ["Architecture", "Backend", "Scale"],
+    image: "/banking.webp",
+    href: "/banking",
+  },
+  {
+    title: "Prison Simulation System",
+    kind: "UX case study",
+    blurb:
+      "The end-to-end UX process behind a live commercial game system — research, personas, user flows, wireframes, and the shipped UI, solo across every discipline.",
+    tags: ["UX Process", "Research", "Game Systems"],
+    image: "/prisonsim.webp",
+    href: "/ux",
+  },
+];
+---
+
+<Layout
+  title="Case Studies — Kristepher Reed"
+  description="Case studies: the end-to-end process and engineering deep-dives behind shipped commercial software."
+>
+  <Nav />
+  <main id="main">
+    <!-- Intro -->
+    <section class="relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent)]"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-40 right-[-15%] h-[30rem] w-[30rem] rounded-full opacity-20 blur-3xl"
+        style="background: radial-gradient(closest-side, #8b5cf6, transparent 70%);"
+      >
+      </div>
+      <div class="relative mx-auto max-w-5xl px-5 pt-32 pb-12 sm:px-8 sm:pt-40 sm:pb-16">
+        <p data-reveal class="font-mono text-xs tracking-[0.25em] text-accent uppercase">
+          Case Studies
+        </p>
+        <h1
+          data-reveal
+          style="--reveal-delay: 0.08s"
+          class="mt-4 font-display text-4xl leading-[0.95] font-black tracking-tight text-ink sm:text-6xl md:text-7xl"
+        >
+          Case Studies<span class="text-gradient">.</span>
+        </h1>
+        <p
+          data-reveal
+          style="--reveal-delay: 0.16s"
+          class="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+        >
+          The work, written up end to end — how I research, design, architect, and ship. Each
+          study walks a real commercial product from the first problem to the shipped result.
+        </p>
+      </div>
+    </section>
+
+    <!-- List -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="01" title="All Case Studies" ghost="Studies" />
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {
+            studies.map((s, i) => (
+              <a
+                href={s.href}
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.07}s`}
+                class="group block border border-line bg-surface/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/60 hover:bg-surface hover:shadow-[0_0_60px_-15px_rgba(168,85,247,0.45)] sm:p-8"
+              >
+                <img
+                  src={s.image}
+                  alt={`${s.title} case study`}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-video w-full border border-line object-cover"
+                />
+                <span class="mt-5 block font-mono text-xs text-accent">{s.kind}</span>
+                <h3 class="mt-2 font-display text-2xl font-bold tracking-tight text-ink">
+                  {s.title}
+                </h3>
+                <p class="mt-3 leading-relaxed text-muted">{s.blurb}</p>
+                <ul class="mt-4 flex flex-wrap gap-2" aria-label="Focus areas">
+                  {s.tags.map((tag) => (
+                    <li class="border border-line bg-raised px-2.5 py-1 font-mono text-[11px] text-muted">
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+                <span class="mt-5 inline-flex items-center gap-2 font-mono text-sm text-accent-soft transition-colors group-hover:text-accent">
+                  Read the case study
+                  <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </a>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-14">
+          <a
+            href="/#work"
+            class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            ← Back to work
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
+      <p class="font-mono text-xs text-muted">© 2026 Kristepher Reed</p>
+      <a href="/" class="font-mono text-xs text-muted transition-colors hover:text-accent">
+        krisreed — portfolio
+      </a>
+    </div>
+  </footer>
+</Layout>

@@ -3,9 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import Nav from "../components/Nav.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 
-// NOTE FOR KRIS: research findings, persona details, and outcomes below are
-// drafted from what is true of the product and its community — review every
-// claim and correct anything that doesn't match how it actually happened.
+// Claims below are verified against the shipped V1 source (branch `main`,
+// v1.2.11). The V2 section reflects the in-development rewrite (branch `V2`).
 
 const methods = [
   "2,000+ member Discord community",
@@ -18,35 +17,35 @@ const methods = [
 const findings = [
   {
     n: "01",
-    insight: "Jail time was treated as logged-out time.",
+    insight: "A sentence was dead time — players just logged out.",
     evidence:
-      "Watching live servers: arrested players tabbed out, went AFK, or disconnected. The sentence was a punishment for the player, not the character.",
+      "Watching live servers: arrested players tabbed out, went AFK, or disconnected. The sentence punished the person at the keyboard, not the character.",
     decision:
-      "Make the sentence itself the gameplay. The entire product is built around prison time being the most engaging part of getting caught.",
+      "Fill the sentence with a mandatory daily schedule — rollcall, meals, work, yard, showers — and make showing up matter: miss the mandatory blocks and the prison escalates to lockdown, then solitary.",
   },
   {
     n: "02",
-    insight: "Players ignore systems with invisible progress.",
+    insight: "Players ignore anything without an on-screen payoff.",
     evidence:
-      "Community feedback on earlier scripts: features without visible rank, stats, or unlocks went unused within weeks.",
+      "Feedback on earlier scripts was consistent — systems with no visible result went unused within weeks.",
     decision:
-      "Persistent progression that survives release — rank, reputation, and earnings carry across sentences, shown on screen at all times.",
+      "Optional work jobs that visibly chip time off the sentence and pay commissary cash, with the countdown always on screen. Every action returns an immediate, legible result: less time, more money.",
   },
   {
     n: "03",
     insight: "Operators buy compatibility, not features.",
     evidence:
-      "The #1 pre-sales question was never about gameplay — it was “does this work with my framework and inventory?”",
+      "The #1 pre-sales question was never about gameplay — it was “does this work with my framework, inventory, and map?”",
     decision:
-      "Framework-agnostic integration layer and a single config file with safe defaults. Install friction is a UX problem, and the operator is a user too.",
+      "A framework bridge (QBCore / ESX / QBox), MLO-agnostic config that ships with two prison layouts, and one file of safe defaults. Install friction is a UX problem, and the operator is a user too.",
   },
   {
     n: "04",
     insight: "Support load clusters at first contact.",
     evidence:
-      "Ticket analysis across the catalog: most tickets came from install and first-run config, not bugs in play.",
+      "Ticket analysis across the catalog: most tickets came from install and first-run config, not from bugs in play.",
     decision:
-      "Defaults that work with zero edits, loud and specific error messages, and docs ordered by the first 10 minutes of ownership.",
+      "Defaults that work with zero edits, loud and specific error messages, and docs ordered by the first ten minutes of ownership.",
   },
 ];
 
@@ -57,36 +56,43 @@ const personas = [
     role: "Buys, installs, and runs the product",
     quote: "I run a city of 200 players. If your script breaks my server, it's gone by tonight.",
     goals: [
-      "Drop-in install that works with their framework",
+      "Drop-in install that fits their framework and map",
       "Config without touching code",
-      "Keeps players busy without staff babysitting",
+      "Keeps inmates busy without staff babysitting",
     ],
     frustrations: [
-      "Scripts that conflict with their stack",
-      "Support that disappears after purchase",
+      "Scripts that fight their stack",
+      "Support that vanishes after purchase",
       "Features players never touch",
     ],
   },
   {
     initials: "RP",
     name: "The Roleplay Player",
-    role: "Lives inside the system daily",
-    quote: "Getting arrested used to mean alt-tab for 20 minutes. Now I almost want to get caught.",
+    role: "Lives inside the sentence",
+    quote: "Getting arrested used to mean alt-tab for twenty minutes. Now there's a routine to run and time to work off.",
     goals: [
-      "Something to do every minute of a sentence",
-      "Visible rank and earnings progression",
-      "Risk/reward choices worth talking about",
+      "Something to do for the whole sentence",
+      "Visible payoff — time worked off, cash earned",
+      "Stakes worth the risk — work it out, or run",
     ],
     frustrations: [
       "Dead time and AFK timers",
-      "Grind walls with no payoff",
-      "Systems their friends can't join",
+      "Grind with no visible result",
+      "Getting stuck with nothing to do",
     ],
   },
 ];
 
 const wireframeNote =
   "Lo-fi structure, not pixels — these established hierarchy and flow before any styling.";
+
+const v2 = [
+  "Any prison, any map — facilities are authored as data-driven blueprints, not hardcoded coordinates.",
+  "A full pipeline — police booking and charges, sentencing to jail or community service, and escorted transport into intake.",
+  "Trust-tier work, gangs and territory, and a contraband economy with stash points and search checkpoints.",
+  "DOC ranks and a warden layer on a real permission model — server owners configure authority, not code.",
+];
 ---
 
 <Layout
@@ -270,15 +276,16 @@ const wireframeNote =
       <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
         <SectionHeading num="03" title="User Flow" ghost="Flow" />
         <p data-reveal class="max-w-2xl leading-relaxed text-muted">
-          The core loop, from arrest to release. The design goal from Finding 01 is visible in the
-          shape of it: there is no node where the player is waiting with nothing to do.
+          The core loop, from arrest to release. The goal from Finding 01 is visible in the shape
+          of it: the sentence is a daily routine of scheduled blocks, with optional work that pays
+          off in time and cash — and a punishment branch for skipping it.
         </p>
         <div data-reveal class="mt-10 overflow-x-auto border border-line bg-surface/40 p-4 sm:p-6">
           <svg
-            viewBox="0 0 1560 470"
-            class="min-w-[1000px]"
+            viewBox="0 0 1440 460"
+            class="min-w-[1040px]"
             role="img"
-            aria-label="User flow diagram: arrest leads to intake, then job choice between kitchen, laundry and yard crew; jobs feed a minigame work loop that earns time credit and prison scrip; earnings can be spent at the canteen or risked on contraband which can lead to solitary; serving the sentence leads to release with progression saved, which carries into the next sentence."
+            aria-label="User flow: arrest leads to intake (cell and jumpsuit), then into the daily schedule of rollcall, meals, yard and work. Optional work jobs — metal shop, wood shop, laundry, mining — repeat, each taking time off the sentence and paying cash that is spent at the commissary. Missing mandatory schedule blocks escalates to lockdown and then solitary, after which the inmate returns to the schedule. When the time is served the inmate is released and the prison record is cleared, so each sentence stands alone."
           >
             <defs>
               <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -299,86 +306,81 @@ const wireframeNote =
               .tag { fill: #6f5f93; font: 400 10px "JetBrains Mono Variable", monospace; letter-spacing: 0.1em; }
             </style>
 
-            <!-- main path -->
-            <rect class="node" x="20" y="205" width="120" height="60" rx="6"></rect>
-            <text class="lbl" x="42" y="232">ARREST</text>
-            <text class="sub" x="42" y="250">caught in the act</text>
+            <!-- spine: arrest -> intake -> schedule -->
+            <rect class="node" x="20" y="200" width="120" height="60" rx="6"></rect>
+            <text class="lbl" x="42" y="227">ARREST</text>
+            <text class="sub" x="42" y="245">caught in the act</text>
 
-            <line class="edge" x1="140" y1="235" x2="180" y2="235" marker-end="url(#arr)"></line>
+            <line class="edge" x1="140" y1="230" x2="176" y2="230" marker-end="url(#arr)"></line>
 
-            <rect class="node" x="184" y="205" width="150" height="60" rx="6"></rect>
-            <text class="lbl" x="206" y="232">INTAKE</text>
-            <text class="sub" x="206" y="250">charges → sentence</text>
+            <rect class="node" x="180" y="200" width="170" height="60" rx="6"></rect>
+            <text class="lbl" x="202" y="227">INTAKE</text>
+            <text class="sub" x="202" y="245">cell · jumpsuit</text>
 
-            <line class="edge" x1="334" y1="235" x2="374" y2="235" marker-end="url(#arr)"></line>
+            <line class="edge" x1="350" y1="230" x2="386" y2="230" marker-end="url(#arr)"></line>
 
-            <rect class="node node-accent" x="378" y="205" width="160" height="60" rx="6"></rect>
-            <text class="lbl" x="400" y="232">JOB BOARD</text>
-            <text class="sub" x="400" y="250">player chooses</text>
-            <text class="tag" x="378" y="195">DECISION</text>
+            <rect class="node node-accent" x="390" y="200" width="190" height="60" rx="6"></rect>
+            <text class="lbl" x="412" y="227">DAILY SCHEDULE</text>
+            <text class="sub" x="412" y="245">rollcall · meals · yard</text>
+            <text class="tag" x="390" y="190">DAILY LOOP</text>
 
-            <!-- job branches -->
-            <path class="edge" d="M538 220 C 580 220, 580 95, 622 95" marker-end="url(#arr)"></path>
-            <path class="edge" d="M538 235 L 622 235" marker-end="url(#arr)"></path>
-            <path class="edge" d="M538 250 C 580 250, 580 375, 622 375" marker-end="url(#arr)"></path>
+            <!-- work lane (top) -->
+            <path class="edge" d="M580,214 C 612,214 612,90 626,90" marker-end="url(#arr)"></path>
 
-            <rect class="node" x="626" y="65" width="140" height="60" rx="6"></rect>
-            <text class="lbl" x="648" y="92">KITCHEN</text>
-            <text class="sub" x="648" y="110">timing minigame</text>
-
-            <rect class="node" x="626" y="205" width="140" height="60" rx="6"></rect>
-            <text class="lbl" x="648" y="232">LAUNDRY</text>
-            <text class="sub" x="648" y="250">sorting minigame</text>
-
-            <rect class="node" x="626" y="345" width="140" height="60" rx="6"></rect>
-            <text class="lbl" x="648" y="372">YARD CREW</text>
-            <text class="sub" x="648" y="390">physical labor</text>
-
-            <!-- converge to work loop -->
-            <path class="edge" d="M766 95 C 808 95, 808 220, 850 220" marker-end="url(#arr)"></path>
-            <path class="edge" d="M766 235 L 850 235" marker-end="url(#arr)"></path>
-            <path class="edge" d="M766 375 C 808 375, 808 250, 850 250" marker-end="url(#arr)"></path>
-
-            <rect class="node node-accent" x="854" y="205" width="170" height="60" rx="6"></rect>
-            <text class="lbl" x="876" y="232">WORK LOOP</text>
-            <text class="sub" x="876" y="250">skill-based, repeat</text>
+            <rect class="node node-accent" x="630" y="60" width="190" height="60" rx="6"></rect>
+            <text class="lbl" x="652" y="87">WORK JOBS</text>
+            <text class="sub" x="652" y="105">metal · wood · laundry</text>
+            <text class="tag" x="630" y="50">OPTIONAL</text>
             <!-- self loop -->
-            <path class="edge" d="M1009 205 C 1040 170, 940 150, 920 200" marker-end="url(#arr)"></path>
-            <text class="tag" x="952" y="158">REPEAT</text>
+            <path class="edge" d="M800,60 C 828,28 700,28 680,57" marker-end="url(#arr)"></path>
+            <text class="tag" x="716" y="34">REPEAT</text>
 
-            <line class="edge" x1="1024" y1="235" x2="1064" y2="235" marker-end="url(#arr)"></line>
+            <line class="edge" x1="820" y1="90" x2="854" y2="90" marker-end="url(#arr)"></line>
 
-            <rect class="node" x="1068" y="205" width="170" height="60" rx="6"></rect>
-            <text class="lbl" x="1090" y="232">EARNINGS</text>
-            <text class="sub" x="1090" y="250">time credit + scrip</text>
-            <text class="tag" x="1068" y="195">DECISION</text>
+            <rect class="node" x="858" y="60" width="184" height="60" rx="6"></rect>
+            <text class="lbl" x="880" y="87">−TIME · +CASH</text>
+            <text class="sub" x="880" y="105">every completion</text>
 
-            <!-- spend / risk branches -->
-            <path class="edge" d="M1238 220 C 1280 220, 1280 110, 1322 110" marker-end="url(#arr)"></path>
-            <path class="edge-hot" d="M1238 250 C 1280 250, 1280 360, 1322 360" marker-end="url(#arrhot)"></path>
+            <line class="edge" x1="1042" y1="90" x2="1076" y2="90" marker-end="url(#arr)"></line>
 
-            <rect class="node" x="1326" y="80" width="150" height="60" rx="6"></rect>
-            <text class="lbl" x="1348" y="107">CANTEEN</text>
-            <text class="sub" x="1348" y="125">safe spend</text>
+            <rect class="node" x="1080" y="60" width="184" height="60" rx="6"></rect>
+            <text class="lbl" x="1102" y="87">COMMISSARY</text>
+            <text class="sub" x="1102" y="105">spend cash · food · meds</text>
 
-            <rect class="node node-hot" x="1326" y="330" width="150" height="60" rx="6"></rect>
-            <text class="lbl" x="1348" y="357">CONTRABAND</text>
-            <text class="sub" x="1348" y="375">high risk/reward</text>
-            <text class="tag" x="1326" y="412">CAUGHT → SOLITARY, LOSE SCRIP</text>
+            <!-- payoff drives release -->
+            <path class="edge" d="M950,120 C 1090,150 1210,162 1300,198" marker-end="url(#arr)"></path>
 
-            <!-- to release -->
-            <path class="edge" d="M1401 140 C 1401 170, 1401 175, 1401 200" marker-end="url(#arr)"></path>
-            <path class="edge-hot" d="M1401 330 C 1401 305, 1401 295, 1401 270" marker-end="url(#arrhot)"></path>
+            <!-- spine: schedule -> release (time served) -->
+            <line class="edge" x1="580" y1="238" x2="1236" y2="232" marker-end="url(#arr)"></line>
+            <text class="tag" x="868" y="226">TIME SERVED →</text>
 
-            <rect class="node node-accent" x="1326" y="205" width="150" height="60" rx="6"></rect>
-            <text class="lbl" x="1344" y="232">RELEASE</text>
-            <text class="sub" x="1344" y="250">progression saved</text>
+            <rect class="node node-accent" x="1240" y="200" width="170" height="60" rx="6"></rect>
+            <text class="lbl" x="1262" y="227">RELEASE</text>
+            <text class="sub" x="1262" y="245">time served · freed</text>
+            <text class="tag" x="1240" y="190">RECORD CLEARED</text>
 
-            <!-- persistence callout -->
-            <path class="edge-hot" d="M1401 265 C 1401 440, 460 455, 458 270" marker-end="url(#arrhot)"></path>
-            <text class="tag" x="700" y="452">RANK + REPUTATION CARRY INTO THE NEXT SENTENCE</text>
+            <!-- punishment branch (bottom) -->
+            <path class="edge-hot" d="M520,260 C 560,322 592,366 626,368" marker-end="url(#arrhot)"></path>
+
+            <rect class="node node-hot" x="630" y="340" width="180" height="60" rx="6"></rect>
+            <text class="lbl" x="652" y="367">LOCKDOWN</text>
+            <text class="sub" x="652" y="385">miss mandatory blocks</text>
+            <text class="tag" x="630" y="330">MISS EVENTS</text>
+
+            <line class="edge-hot" x1="810" y1="370" x2="846" y2="370" marker-end="url(#arrhot)"></line>
+
+            <rect class="node node-hot" x="850" y="340" width="160" height="60" rx="6"></rect>
+            <text class="lbl" x="872" y="367">SOLITARY</text>
+            <text class="sub" x="872" y="385">isolation timeout</text>
+
+            <path class="edge-hot" d="M850,372 C 640,420 470,332 478,262" marker-end="url(#arrhot)"></path>
+            <text class="tag" x="556" y="418">SERVE IT → BACK TO THE SCHEDULE</text>
           </svg>
         </div>
+        <p data-reveal class="mt-6 max-w-2xl text-sm leading-relaxed text-faint">
+          Off the loop sits a high-risk exit: hacking the gate control panel to escape — fail it
+          and it calls the police. Release wipes the prison record, so the next arrest starts clean.
+        </p>
       </div>
     </section>
 
@@ -389,7 +391,7 @@ const wireframeNote =
         <p data-reveal class="max-w-2xl leading-relaxed text-muted">{wireframeNote}</p>
         <div class="mt-10 grid gap-6 md:grid-cols-3">
           <figure data-reveal class="border border-line bg-surface/60 p-4">
-            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the job board menu: header with title and timer, three job rows each with an icon, description lines, and a select button">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the work station menu: header with title and timer, three job rows each with an icon, description lines, and a start button">
               <rect width="320" height="200" fill="#0d0817"></rect>
               <rect x="12" y="12" width="120" height="14" rx="2" fill="#2b1c47"></rect>
               <rect x="252" y="12" width="56" height="14" rx="2" fill="#a855f7" opacity="0.5"></rect>
@@ -406,12 +408,12 @@ const wireframeNote =
               }
             </svg>
             <figcaption class="mt-3 font-mono text-xs text-muted">
-              <span class="text-accent">W-01</span> · Job board — choose how to serve time
+              <span class="text-accent">W-01</span> · Work station — pick a job and start
             </figcaption>
           </figure>
 
           <figure data-reveal style="--reveal-delay: 0.07s" class="border border-line bg-surface/60 p-4">
-            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the in-game HUD: sentence timer top right, objective text top left, progress bar and earnings pills bottom left">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the in-game HUD: sentence timer top right, schedule state top left, progress bar and cash readout bottom left">
               <rect width="320" height="200" fill="#0d0817"></rect>
               <rect x="12" y="12" width="90" height="10" rx="2" fill="#2b1c47"></rect>
               <rect x="12" y="28" width="140" height="6" rx="2" fill="#1a112d"></rect>
@@ -424,12 +426,12 @@ const wireframeNote =
               <circle cx="160" cy="100" r="3" fill="#a855f7" opacity="0.7"></circle>
             </svg>
             <figcaption class="mt-3 font-mono text-xs text-muted">
-              <span class="text-accent">W-02</span> · In-job HUD — progress always visible
+              <span class="text-accent">W-02</span> · Sentence HUD — timer + schedule state
             </figcaption>
           </figure>
 
           <figure data-reveal style="--reveal-delay: 0.14s" class="border border-line bg-surface/60 p-4">
-            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the canteen shop: balance chip top right, grid of four item tiles each with image area, name line and price button">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the commissary shop: cash balance top right, grid of four item tiles each with image area, name line and price button">
               <rect width="320" height="200" fill="#0d0817"></rect>
               <rect x="12" y="12" width="100" height="14" rx="2" fill="#2b1c47"></rect>
               <rect x="240" y="12" width="68" height="16" rx="8" fill="#a855f7" opacity="0.4"></rect>
@@ -450,7 +452,7 @@ const wireframeNote =
               }
             </svg>
             <figcaption class="mt-3 font-mono text-xs text-muted">
-              <span class="text-accent">W-03</span> · Canteen — the safe sink for earnings
+              <span class="text-accent">W-03</span> · Commissary — spend earned cash
             </figcaption>
           </figure>
         </div>
@@ -462,8 +464,9 @@ const wireframeNote =
       <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
         <SectionHeading num="05" title="Shipped UI" ghost="Shipped" />
         <p data-reveal class="max-w-2xl leading-relaxed text-muted">
-          The final interface, in production on live servers. Built exactly from the wireframes —
-          dark, legible at a glance mid-gameplay, progression always on screen.
+          The final interface, in production on live servers. Built straight from the wireframes —
+          dark, legible at a glance mid-gameplay, with the sentence timer and schedule state always
+          on screen.
         </p>
         <div
           data-reveal
@@ -490,13 +493,43 @@ const wireframeNote =
             ))
           }
         </div>
+      </div>
+    </section>
+
+    <!-- V2 -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="06" title="Where It's Going" ghost="V2" />
+        <div data-reveal class="flex flex-wrap items-center gap-3">
+          <p class="max-w-2xl leading-relaxed text-muted">
+            V1 proved the loop. V2 is a ground-up rebuild — the same sentence-as-gameplay idea
+            opened into a data-driven platform, rebuilt server-authoritative and audit-logged from
+            day one.
+          </p>
+          <span class="border border-accent/40 bg-raised px-2.5 py-1 font-mono text-[10px] tracking-wide text-accent-soft uppercase">
+            In development
+          </span>
+        </div>
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+          {
+            v2.map((item, i) => (
+              <li
+                data-reveal
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border-l-2 border-accent/60 bg-surface/40 py-3 pr-4 pl-4 text-sm leading-relaxed text-muted"
+              >
+                {item}
+              </li>
+            ))
+          }
+        </ul>
 
         <div data-reveal class="mt-14 flex flex-wrap items-center gap-3">
           <a
-            href="/#work"
+            href="/case-studies"
             class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
           >
-            ← Back to work
+            ← All case studies
           </a>
           <a
             href="mailto:krisreed2001@gmail.com"
