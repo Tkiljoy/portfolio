@@ -11,11 +11,12 @@ interface Props {
   tags: string[];
   copy: string;
   link?: { href: string; label: string };
+  study?: string; // internal link to a full UX case study page
   asset?: string; // label for the placeholder slot, omitted = no media
   caseStudies?: CaseStudy[];
 }
 
-const { index, title, meta, tags, copy, link, asset, caseStudies } = Astro.props;
+const { index, title, meta, tags, copy, link, study, asset, caseStudies } = Astro.props;
 const number = String(index).padStart(2, "0");
 ---
 
@@ -77,21 +78,39 @@ const number = String(index).padStart(2, "0");
         )
       }
 
-      {
-        link && (
-          <a
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group/link mt-7 inline-flex items-center gap-2 font-mono text-sm text-ink transition-colors hover:text-accent"
-          >
-            {link.label}
-            <span aria-hidden="true" class="transition-transform group-hover/link:translate-x-1">
-              →
-            </span>
-          </a>
-        )
-      }
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-2">
+        {
+          study && (
+            <a
+              href={study}
+              class="group/study mt-7 inline-flex items-center gap-2 font-mono text-sm text-accent-soft transition-colors hover:text-accent"
+            >
+              Read the UX case study
+              <span
+                aria-hidden="true"
+                class="transition-transform group-hover/study:translate-x-1"
+              >
+                →
+              </span>
+            </a>
+          )
+        }
+        {
+          link && (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group/link mt-7 inline-flex items-center gap-2 font-mono text-sm text-ink transition-colors hover:text-accent"
+            >
+              {link.label}
+              <span aria-hidden="true" class="transition-transform group-hover/link:translate-x-1">
+                →
+              </span>
+            </a>
+          )
+        }
+      </div>
     </div>
   </div>
 </article>

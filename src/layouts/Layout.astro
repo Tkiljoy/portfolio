@@ -5,10 +5,17 @@ import "@fontsource-variable/bricolage-grotesque";
 import "@fontsource-variable/instrument-sans";
 import "@fontsource-variable/jetbrains-mono";
 
-const title = "Kristepher Reed — Full-Stack Developer";
-const description =
-  "Full-stack developer and game systems engineer. Six years shipping production software solo — commercial game systems, community platforms, and AI automation.";
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Kristepher Reed — Full-Stack Developer",
+  description = "Full-stack developer and game systems engineer. Six years shipping production software solo — commercial game systems, community platforms, and AI automation.",
+} = Astro.props;
 const site = Astro.site ?? new URL("https://portfolio-tkiljoy.vercel.app");
+const canonical = new URL(Astro.url.pathname, site);
 const ogImage = new URL("/og.png", site);
 ---
 
@@ -21,12 +28,12 @@ const ogImage = new URL("/og.png", site);
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={site.href} />
+    <link rel="canonical" href={canonical.href} />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={site.href} />
+    <meta property="og:url" content={canonical.href} />
     <meta property="og:image" content={ogImage.href} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />

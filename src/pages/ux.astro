@@ -1,0 +1,520 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+
+// NOTE FOR KRIS: research findings, persona details, and outcomes below are
+// drafted from what is true of the product and its community — review every
+// claim and correct anything that doesn't match how it actually happened.
+
+const methods = [
+  "2,000+ member Discord community",
+  "Support ticket analysis",
+  "Live server observation",
+  "Operator pre-sales questions",
+  "Competitor teardown",
+];
+
+const findings = [
+  {
+    n: "01",
+    insight: "Jail time was treated as logged-out time.",
+    evidence:
+      "Watching live servers: arrested players tabbed out, went AFK, or disconnected. The sentence was a punishment for the player, not the character.",
+    decision:
+      "Make the sentence itself the gameplay. The entire product is built around prison time being the most engaging part of getting caught.",
+  },
+  {
+    n: "02",
+    insight: "Players ignore systems with invisible progress.",
+    evidence:
+      "Community feedback on earlier scripts: features without visible rank, stats, or unlocks went unused within weeks.",
+    decision:
+      "Persistent progression that survives release — rank, reputation, and earnings carry across sentences, shown on screen at all times.",
+  },
+  {
+    n: "03",
+    insight: "Operators buy compatibility, not features.",
+    evidence:
+      "The #1 pre-sales question was never about gameplay — it was “does this work with my framework and inventory?”",
+    decision:
+      "Framework-agnostic integration layer and a single config file with safe defaults. Install friction is a UX problem, and the operator is a user too.",
+  },
+  {
+    n: "04",
+    insight: "Support load clusters at first contact.",
+    evidence:
+      "Ticket analysis across the catalog: most tickets came from install and first-run config, not bugs in play.",
+    decision:
+      "Defaults that work with zero edits, loud and specific error messages, and docs ordered by the first 10 minutes of ownership.",
+  },
+];
+
+const personas = [
+  {
+    initials: "SO",
+    name: "The Server Operator",
+    role: "Buys, installs, and runs the product",
+    quote: "I run a city of 200 players. If your script breaks my server, it's gone by tonight.",
+    goals: [
+      "Drop-in install that works with their framework",
+      "Config without touching code",
+      "Keeps players busy without staff babysitting",
+    ],
+    frustrations: [
+      "Scripts that conflict with their stack",
+      "Support that disappears after purchase",
+      "Features players never touch",
+    ],
+  },
+  {
+    initials: "RP",
+    name: "The Roleplay Player",
+    role: "Lives inside the system daily",
+    quote: "Getting arrested used to mean alt-tab for 20 minutes. Now I almost want to get caught.",
+    goals: [
+      "Something to do every minute of a sentence",
+      "Visible rank and earnings progression",
+      "Risk/reward choices worth talking about",
+    ],
+    frustrations: [
+      "Dead time and AFK timers",
+      "Grind walls with no payoff",
+      "Systems their friends can't join",
+    ],
+  },
+];
+
+const wireframeNote =
+  "Lo-fi structure, not pixels — these established hierarchy and flow before any styling.";
+---
+
+<Layout
+  title="UX Case Study — Kristepher Reed"
+  description="End-to-end UX case study: research, personas, user flows, wireframes, and shipped UI for a live commercial game system."
+>
+  <Nav />
+  <main id="main">
+    <!-- Intro -->
+    <section class="relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent)]"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-40 right-[-15%] h-[30rem] w-[30rem] rounded-full opacity-20 blur-3xl"
+        style="background: radial-gradient(closest-side, #8b5cf6, transparent 70%);"
+      >
+      </div>
+      <div class="relative mx-auto max-w-5xl px-5 pt-32 pb-12 sm:px-8 sm:pt-40 sm:pb-16">
+        <p data-reveal class="font-mono text-xs tracking-[0.25em] text-accent uppercase">
+          UX Case Study
+        </p>
+        <h1
+          data-reveal
+          style="--reveal-delay: 0.08s"
+          class="mt-4 font-display text-4xl leading-[0.95] font-black tracking-tight text-ink sm:text-6xl md:text-7xl"
+        >
+          Prison Simulation System<span class="text-gradient">.</span>
+        </h1>
+        <p
+          data-reveal
+          style="--reveal-delay: 0.16s"
+          class="mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+        >
+          The end-to-end process behind a live commercial product — research, personas, flows,
+          wireframes, and the shipped UI. Solo across every discipline: I was the researcher, the
+          designer, and the engineer.
+        </p>
+        <dl
+          data-reveal
+          style="--reveal-delay: 0.24s"
+          class="mt-8 grid max-w-2xl grid-cols-2 gap-px border border-line bg-line sm:grid-cols-4"
+        >
+          {
+            [
+              ["Role", "Solo — UX to ship"],
+              ["Year", "2025"],
+              ["Status", "Live & selling"],
+              ["Platform", "Multiplayer servers"],
+            ].map(([dt, dd]) => (
+              <div class="bg-surface px-4 py-3">
+                <dt class="font-mono text-[10px] tracking-[0.2em] text-faint uppercase">{dt}</dt>
+                <dd class="mt-1 font-mono text-xs text-ink">{dd}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <!-- Research -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="01" title="Research" ghost="Research" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          No lab, no recruiting budget — research came from running a 2,000+ member community
+          around the catalog and treating every ticket, complaint, and pre-sales question as a
+          data point.
+        </p>
+        <ul data-reveal class="mt-6 flex flex-wrap gap-2" aria-label="Research methods">
+          {
+            methods.map((m) => (
+              <li class="border border-line bg-surface px-3 py-1.5 font-mono text-xs text-muted">
+                {m}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {
+            findings.map((f, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.06}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <span class="font-mono text-xs text-accent">Finding {f.n}</span>
+                <h3 class="mt-3 font-display text-xl font-bold tracking-tight text-ink">
+                  {f.insight}
+                </h3>
+                <p class="mt-3 text-sm leading-relaxed text-muted">{f.evidence}</p>
+                <p class="mt-4 border-l-2 border-accent/60 pl-4 text-sm leading-relaxed text-ink">
+                  <span class="font-mono text-xs text-accent-soft">DECISION → </span>
+                  {f.decision}
+                </p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Personas -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="02" title="Personas" ghost="Personas" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          Two users, one product — and they want different things. The operator pays for it; the
+          player lives in it. Every design call had to clear both.
+        </p>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {
+            personas.map((p, i) => (
+              <article
+                data-reveal
+                data-spotlight
+                style={`--reveal-delay: ${i * 0.08}s`}
+                class="border border-line bg-surface/60 p-6 sm:p-8"
+              >
+                <div class="flex items-center gap-4">
+                  <span
+                    aria-hidden="true"
+                    class="flex h-12 w-12 items-center justify-center rounded-full font-display text-sm font-black text-bg"
+                    style="background: linear-gradient(135deg, #8b5cf6, #e879f9);"
+                  >
+                    {p.initials}
+                  </span>
+                  <div>
+                    <h3 class="font-display text-xl font-bold tracking-tight text-ink">{p.name}</h3>
+                    <p class="font-mono text-xs text-muted">{p.role}</p>
+                  </div>
+                </div>
+                <blockquote class="mt-5 border-l-2 border-accent/60 pl-4 text-sm leading-relaxed text-ink italic">
+                  "{p.quote}"
+                </blockquote>
+                <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <h4 class="font-mono text-[10px] tracking-[0.2em] text-accent-soft uppercase">
+                      Goals
+                    </h4>
+                    <ul class="mt-2 space-y-1.5">
+                      {p.goals.map((g) => (
+                        <li class="flex gap-2 text-xs leading-relaxed text-muted">
+                          <span aria-hidden="true" class="text-accent">
+                            +
+                          </span>
+                          {g}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="font-mono text-[10px] tracking-[0.2em] text-accent-soft uppercase">
+                      Frustrations
+                    </h4>
+                    <ul class="mt-2 space-y-1.5">
+                      {p.frustrations.map((fr) => (
+                        <li class="flex gap-2 text-xs leading-relaxed text-muted">
+                          <span aria-hidden="true" class="text-hot">
+                            −
+                          </span>
+                          {fr}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- User flow -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="03" title="User Flow" ghost="Flow" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          The core loop, from arrest to release. The design goal from Finding 01 is visible in the
+          shape of it: there is no node where the player is waiting with nothing to do.
+        </p>
+        <div data-reveal class="mt-10 overflow-x-auto border border-line bg-surface/40 p-4 sm:p-6">
+          <svg
+            viewBox="0 0 1560 470"
+            class="min-w-[1000px]"
+            role="img"
+            aria-label="User flow diagram: arrest leads to intake, then job choice between kitchen, laundry and yard crew; jobs feed a minigame work loop that earns time credit and prison scrip; earnings can be spent at the canteen or risked on contraband which can lead to solitary; serving the sentence leads to release with progression saved, which carries into the next sentence."
+          >
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#a855f7"></path>
+              </marker>
+              <marker id="arrhot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#e879f9"></path>
+              </marker>
+            </defs>
+            <style>
+              .node { fill: #120b20; stroke: #2b1c47; stroke-width: 1.5; rx: 6; }
+              .node-accent { stroke: #a855f7; }
+              .node-hot { stroke: #e879f9; stroke-dasharray: 5 4; }
+              .lbl { fill: #ece7f8; font: 600 15px "JetBrains Mono Variable", monospace; }
+              .sub { fill: #a89bc7; font: 400 11px "JetBrains Mono Variable", monospace; }
+              .edge { stroke: #a855f7; stroke-width: 1.5; fill: none; opacity: 0.7; }
+              .edge-hot { stroke: #e879f9; stroke-width: 1.5; fill: none; opacity: 0.7; stroke-dasharray: 5 4; }
+              .tag { fill: #6f5f93; font: 400 10px "JetBrains Mono Variable", monospace; letter-spacing: 0.1em; }
+            </style>
+
+            <!-- main path -->
+            <rect class="node" x="20" y="205" width="120" height="60" rx="6"></rect>
+            <text class="lbl" x="42" y="232">ARREST</text>
+            <text class="sub" x="42" y="250">caught in the act</text>
+
+            <line class="edge" x1="140" y1="235" x2="180" y2="235" marker-end="url(#arr)"></line>
+
+            <rect class="node" x="184" y="205" width="150" height="60" rx="6"></rect>
+            <text class="lbl" x="206" y="232">INTAKE</text>
+            <text class="sub" x="206" y="250">charges → sentence</text>
+
+            <line class="edge" x1="334" y1="235" x2="374" y2="235" marker-end="url(#arr)"></line>
+
+            <rect class="node node-accent" x="378" y="205" width="160" height="60" rx="6"></rect>
+            <text class="lbl" x="400" y="232">JOB BOARD</text>
+            <text class="sub" x="400" y="250">player chooses</text>
+            <text class="tag" x="378" y="195">DECISION</text>
+
+            <!-- job branches -->
+            <path class="edge" d="M538 220 C 580 220, 580 95, 622 95" marker-end="url(#arr)"></path>
+            <path class="edge" d="M538 235 L 622 235" marker-end="url(#arr)"></path>
+            <path class="edge" d="M538 250 C 580 250, 580 375, 622 375" marker-end="url(#arr)"></path>
+
+            <rect class="node" x="626" y="65" width="140" height="60" rx="6"></rect>
+            <text class="lbl" x="648" y="92">KITCHEN</text>
+            <text class="sub" x="648" y="110">timing minigame</text>
+
+            <rect class="node" x="626" y="205" width="140" height="60" rx="6"></rect>
+            <text class="lbl" x="648" y="232">LAUNDRY</text>
+            <text class="sub" x="648" y="250">sorting minigame</text>
+
+            <rect class="node" x="626" y="345" width="140" height="60" rx="6"></rect>
+            <text class="lbl" x="648" y="372">YARD CREW</text>
+            <text class="sub" x="648" y="390">physical labor</text>
+
+            <!-- converge to work loop -->
+            <path class="edge" d="M766 95 C 808 95, 808 220, 850 220" marker-end="url(#arr)"></path>
+            <path class="edge" d="M766 235 L 850 235" marker-end="url(#arr)"></path>
+            <path class="edge" d="M766 375 C 808 375, 808 250, 850 250" marker-end="url(#arr)"></path>
+
+            <rect class="node node-accent" x="854" y="205" width="170" height="60" rx="6"></rect>
+            <text class="lbl" x="876" y="232">WORK LOOP</text>
+            <text class="sub" x="876" y="250">skill-based, repeat</text>
+            <!-- self loop -->
+            <path class="edge" d="M1009 205 C 1040 170, 940 150, 920 200" marker-end="url(#arr)"></path>
+            <text class="tag" x="952" y="158">REPEAT</text>
+
+            <line class="edge" x1="1024" y1="235" x2="1064" y2="235" marker-end="url(#arr)"></line>
+
+            <rect class="node" x="1068" y="205" width="170" height="60" rx="6"></rect>
+            <text class="lbl" x="1090" y="232">EARNINGS</text>
+            <text class="sub" x="1090" y="250">time credit + scrip</text>
+            <text class="tag" x="1068" y="195">DECISION</text>
+
+            <!-- spend / risk branches -->
+            <path class="edge" d="M1238 220 C 1280 220, 1280 110, 1322 110" marker-end="url(#arr)"></path>
+            <path class="edge-hot" d="M1238 250 C 1280 250, 1280 360, 1322 360" marker-end="url(#arrhot)"></path>
+
+            <rect class="node" x="1326" y="80" width="150" height="60" rx="6"></rect>
+            <text class="lbl" x="1348" y="107">CANTEEN</text>
+            <text class="sub" x="1348" y="125">safe spend</text>
+
+            <rect class="node node-hot" x="1326" y="330" width="150" height="60" rx="6"></rect>
+            <text class="lbl" x="1348" y="357">CONTRABAND</text>
+            <text class="sub" x="1348" y="375">high risk/reward</text>
+            <text class="tag" x="1326" y="412">CAUGHT → SOLITARY, LOSE SCRIP</text>
+
+            <!-- to release -->
+            <path class="edge" d="M1401 140 C 1401 170, 1401 175, 1401 200" marker-end="url(#arr)"></path>
+            <path class="edge-hot" d="M1401 330 C 1401 305, 1401 295, 1401 270" marker-end="url(#arrhot)"></path>
+
+            <rect class="node node-accent" x="1326" y="205" width="150" height="60" rx="6"></rect>
+            <text class="lbl" x="1344" y="232">RELEASE</text>
+            <text class="sub" x="1344" y="250">progression saved</text>
+
+            <!-- persistence callout -->
+            <path class="edge-hot" d="M1401 265 C 1401 440, 460 455, 458 270" marker-end="url(#arrhot)"></path>
+            <text class="tag" x="700" y="452">RANK + REPUTATION CARRY INTO THE NEXT SENTENCE</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wireframes -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="04" title="Wireframes" ghost="Frames" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">{wireframeNote}</p>
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          <figure data-reveal class="border border-line bg-surface/60 p-4">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the job board menu: header with title and timer, three job rows each with an icon, description lines, and a select button">
+              <rect width="320" height="200" fill="#0d0817"></rect>
+              <rect x="12" y="12" width="120" height="14" rx="2" fill="#2b1c47"></rect>
+              <rect x="252" y="12" width="56" height="14" rx="2" fill="#a855f7" opacity="0.5"></rect>
+              {
+                [0, 1, 2].map((i) => (
+                  <g>
+                    <rect x="12" y={40 + i * 50} width="296" height="42" rx="3" fill="none" stroke="#2b1c47" stroke-width="1.5" />
+                    <rect x="22" y={48 + i * 50} width="26" height="26" rx="3" fill="#1a112d" />
+                    <rect x="58" y={50 + i * 50} width="110" height="8" rx="2" fill="#2b1c47" />
+                    <rect x="58" y={64 + i * 50} width="160" height="6" rx="2" fill="#1a112d" />
+                    <rect x="246" y={52 + i * 50} width="52" height="18" rx="2" fill="#a855f7" opacity={i === 0 ? "0.6" : "0.25"} />
+                  </g>
+                ))
+              }
+            </svg>
+            <figcaption class="mt-3 font-mono text-xs text-muted">
+              <span class="text-accent">W-01</span> · Job board — choose how to serve time
+            </figcaption>
+          </figure>
+
+          <figure data-reveal style="--reveal-delay: 0.07s" class="border border-line bg-surface/60 p-4">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the in-game HUD: sentence timer top right, objective text top left, progress bar and earnings pills bottom left">
+              <rect width="320" height="200" fill="#0d0817"></rect>
+              <rect x="12" y="12" width="90" height="10" rx="2" fill="#2b1c47"></rect>
+              <rect x="12" y="28" width="140" height="6" rx="2" fill="#1a112d"></rect>
+              <rect x="236" y="12" width="72" height="22" rx="3" fill="none" stroke="#a855f7" stroke-opacity="0.5" stroke-width="1.5"></rect>
+              <rect x="244" y="19" width="56" height="8" rx="2" fill="#2b1c47"></rect>
+              <rect x="12" y="156" width="120" height="8" rx="4" fill="#1a112d"></rect>
+              <rect x="12" y="156" width="74" height="8" rx="4" fill="#a855f7" opacity="0.6"></rect>
+              <rect x="12" y="172" width="44" height="14" rx="7" fill="#1a112d"></rect>
+              <rect x="62" y="172" width="44" height="14" rx="7" fill="#1a112d"></rect>
+              <circle cx="160" cy="100" r="3" fill="#a855f7" opacity="0.7"></circle>
+            </svg>
+            <figcaption class="mt-3 font-mono text-xs text-muted">
+              <span class="text-accent">W-02</span> · In-job HUD — progress always visible
+            </figcaption>
+          </figure>
+
+          <figure data-reveal style="--reveal-delay: 0.14s" class="border border-line bg-surface/60 p-4">
+            <svg viewBox="0 0 320 200" class="w-full" role="img" aria-label="Wireframe of the canteen shop: balance chip top right, grid of four item tiles each with image area, name line and price button">
+              <rect width="320" height="200" fill="#0d0817"></rect>
+              <rect x="12" y="12" width="100" height="14" rx="2" fill="#2b1c47"></rect>
+              <rect x="240" y="12" width="68" height="16" rx="8" fill="#a855f7" opacity="0.4"></rect>
+              {
+                [0, 1, 2, 3].map((i) => {
+                  const x = 12 + (i % 2) * 152;
+                  const y = 42 + Math.floor(i / 2) * 76;
+                  return (
+                    <g>
+                      <rect x={x} y={y} width="144" height="68" rx="3" fill="none" stroke="#2b1c47" stroke-width="1.5" />
+                      <rect x={x + 8} y={y + 8} width="36" height="36" rx="3" fill="#1a112d" />
+                      <rect x={x + 52} y={y + 12} width="70" height="8" rx="2" fill="#2b1c47" />
+                      <rect x={x + 52} y={y + 26} width="48" height="6" rx="2" fill="#1a112d" />
+                      <rect x={x + 52} y={y + 44} width="50" height="14" rx="2" fill="#a855f7" opacity="0.3" />
+                    </g>
+                  );
+                })
+              }
+            </svg>
+            <figcaption class="mt-3 font-mono text-xs text-muted">
+              <span class="text-accent">W-03</span> · Canteen — the safe sink for earnings
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shipped UI + outcomes -->
+    <section class="overflow-hidden border-t border-line">
+      <div class="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+        <SectionHeading num="05" title="Shipped UI" ghost="Shipped" />
+        <p data-reveal class="max-w-2xl leading-relaxed text-muted">
+          The final interface, in production on live servers. Built exactly from the wireframes —
+          dark, legible at a glance mid-gameplay, progression always on screen.
+        </p>
+        <div
+          data-reveal
+          class="hatch mt-10 flex aspect-video items-center justify-center border border-dashed border-line bg-surface/60"
+          role="img"
+          aria-label="Final UI screenshots coming soon"
+        >
+          <span class="px-4 text-center font-mono text-xs text-muted">
+            Final UI screenshots / gameplay clip
+          </span>
+        </div>
+
+        <div data-reveal class="mt-12 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {
+            [
+              ["Live", "running in production on multiplayer servers"],
+              ["Commercial", "sold to paying server operators"],
+              ["Low-touch", "defaults-first config kept support volume down"],
+            ].map(([k, v]) => (
+              <div class="bg-surface px-5 py-6">
+                <h3 class="text-gradient font-display text-xl font-black tracking-tight">{k}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{v}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div data-reveal class="mt-14 flex flex-wrap items-center gap-3">
+          <a
+            href="/#work"
+            class="inline-block border border-line px-4 py-2 font-mono text-sm text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            ← Back to work
+          </a>
+          <a
+            href="mailto:krisreed2001@gmail.com"
+            class="inline-block bg-accent px-5 py-2.5 font-mono text-sm font-semibold text-bg transition-all hover:bg-accent-soft hover:shadow-[0_0_32px_-6px_rgba(168,85,247,0.8)]"
+          >
+            Hire the whole pipeline
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
+      <p class="font-mono text-xs text-muted">© 2026 Kristepher Reed</p>
+      <a href="/" class="font-mono text-xs text-muted transition-colors hover:text-accent">
+        krisreed — portfolio
+      </a>
+    </div>
+  </footer>
+</Layout>
