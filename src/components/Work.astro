@@ -34,11 +34,32 @@ const projects = [
   {
     title: "DHS-Lair",
     meta: "Multi-Agent AI Orchestration Platform · In Development · 2026",
-    tags: ["Node.js", "TypeScript", "Fastify", "SQLite", "Claude"],
-    copy: "Self-hosted platform that coordinates a crew of role-based AI agents (router, dev, review, ideas, ops), each sandboxed with its own tool allowlist. Features shared persistent memory, an append-only audit log, kill switches, and an outbound exfil guard. Built entirely self-directed. Voice I/O on the roadmap.",
+    tags: ["Node.js", "TypeScript", "Fastify", "SQLite", "Nuxt", "Claude"],
+    copy: "Self-hosted platform that coordinates a crew of role-based AI agents (router, dev, review, ideas, ops), each sandboxed with its own tool allowlist. Features shared persistent memory, an append-only audit log, kill switches, and an outbound exfil guard. A companion Nuxt 4 / Vue 3 war-room dashboard — deployed to Vercel — pairs to the local runner over a key for remote visibility into agent sessions, memory, and audit logs. Built entirely self-directed; voice I/O on the roadmap.",
     image: "/dhs-lair.webp",
     asset: "Dashboard / war-room screenshot",
     link: { href: "https://github.com/Tkiljoy/DHS-Lair", label: "View on GitHub" },
+  },
+  {
+    title: "DHS-NOX-BOT",
+    meta: "Production AI Support Platform · Live · 2026",
+    tags: ["TypeScript", "discord.js", "Claude", "RAG", "Prisma"],
+    copy: "A production Discord support platform, not a toy bot — ~13,500 lines of TypeScript. It routes customer questions through intent detection into a RAG pipeline that retrieves grounded answers from a DHS/FiveM documentation vector store, picks Claude, Gemini, or a local GGUF model per task, verifies Tebex purchases to auto-grant roles, and pre-briefs a developer with an AI summary before they ever join a ticket. Live in the community.",
+    asset: "Ticket queue + AI console screenshot",
+  },
+  {
+    title: "Zyntho CRM",
+    meta: "Full-Stack CRM · In Development · 2026",
+    tags: ["NestJS", "TypeScript", "PostgreSQL", "Drizzle", "RLS"],
+    copy: "A multi-user CRM built from the database up — NestJS + Drizzle over PostgreSQL with isolation enforced by the database itself, not just the app layer: row-level security with own/team/all tiers (a 30/30 RLS gate), RBAC, and JWT auth. Full CRUD across companies, contacts, leads, deals, and activities, with a drag-and-drop pipeline board and an activity timeline. The API connects as a non-superuser role, so it can never bypass tenant isolation.",
+    asset: "Kanban pipeline board screenshot",
+  },
+  {
+    title: "Project K.A.T",
+    meta: "Cross-Platform Desktop App · Rust + React · 2026",
+    tags: ["Tauri 2", "Rust", "React", "TypeScript", "SQLite"],
+    copy: "A cross-platform desktop command center on Tauri 2 — a Rust core (filesystem, IMAP idle, OAuth, OS-keychain-secured credentials, SQLite migrations) under a React/TypeScript front end with a modular drag-resize dashboard. Roughly 39,000 lines across the Rust and TypeScript halves, including a self-contained gamification engine (quests, loot, skills, XP) and an animated, data-driven ambient view.",
+    asset: "Dashboard grid screenshot",
   },
   {
     title: "Petty Crime System",
@@ -60,7 +81,7 @@ const projects = [
     title: "ReeMain Automations",
     meta: "Co-Founded AI Automation Agency · 2026",
     tags: ["n8n", "Claude API", "OpenAI API", "MCP"],
-    copy: "Co-founded (50/50, UK Ltd) AI automation agency. Built the platform and shipped 27 production n8n workflows across three productized services — AI email triage, lead qualification, and invoice & follow-up automation — integrating Claude and OpenAI reasoning over MCP tooling.",
+    copy: "Co-founded (50/50, UK Ltd) AI automation agency. Built the platform and shipped 72+ production n8n workflows across three productized services — AI email triage, lead qualification, and invoice & follow-up automation — integrating Claude and OpenAI reasoning over MCP tooling.",
     caseStudies: [
       { title: "Smart inbox", detail: "inbound email scored, summarized, and routed automatically." },
       { title: "Lead qualification", detail: "enquiries enriched and prioritized before a human ever reads them." },
